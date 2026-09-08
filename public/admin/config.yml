@@ -6,7 +6,7 @@ backend:
   repo: pakrumina/pata-portfolio
   branch: main
   site_domain: pakrumina.github.io/pata-portfolio
-  base_url: https://pata-decap-oauth.pakrumina.workers.dev.workers.dev/callback
+  base_url: https://pata-decap-oauth.pakrumina.workers.dev
   auth_endpoint: auth
 
 media_library:
