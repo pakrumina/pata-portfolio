@@ -1,0 +1,33 @@
+# Enable local filesystem access during local dev
+local_backend: true
+
+backend:
+  name: github
+  repo: pakrumina/pata-portfolio
+  branch: main
+  site_domain: pakrumina.github.io/pata-portfolio
+  base_url: https://pata-decap-oauth.pakrumina.workers.dev.workers.dev/callback
+  auth_endpoint: auth
+
+media_library:
+  name: uploadcare
+  config:
+    publicKey: demopublickey
+
+media_folder: "public/media"
+public_folder: "https://pub-26bfcff37ae04453971e2b741c9a34be.r2.dev" # TODO Replace with actual URL once going public
+
+collections:
+  - name: "projects"
+    label: "Projects"
+    folder: "src/content/projects"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Client/Category", name: "category", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Featured Video URL", name: "videoUrl", widget: "string", hint: "Direct link to .mp4 file in Cloudflare R2" }
+      - { label: "Thumbnail Image", name: "thumbnail", widget: "string", required: false }
+      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Body Content", name: "body", widget: "markdown", required: false }
