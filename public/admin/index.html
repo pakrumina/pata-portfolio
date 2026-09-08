@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Manager | Pata Portfolio</title>
+    <!-- Explicit absolute base link to config.yml -->
+    <link href="config.yml" type="text/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Script that enables local backend support before Decap loads -->
+    <script>
+      // Automatically detect localhost / 127.0.0.1 and enable local backend proxy
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window.CMS_MANUAL_INIT = true;
+      }
+    </script>
+
+    <!-- Load Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+
+    <!-- Execute manual init on localhost if local_backend proxy is running -->
+    <script>
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window.CMS.init();
+      }
+    </script>
+  </body>
+</html>
