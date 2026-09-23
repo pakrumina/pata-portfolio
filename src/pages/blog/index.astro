@@ -1,0 +1,14 @@
+---
+import { getCollection } from 'astro:content';
+import BlogSection from '../../components/BlogSection.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { BLOG_DESCRIPTION } from '../../consts';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<BaseLayout title="Blog" description={BLOG_DESCRIPTION}>
+	<BlogSection posts={posts} />
+</BaseLayout>

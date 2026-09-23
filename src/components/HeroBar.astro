@@ -1,0 +1,200 @@
+---
+import { SOCIAL_LINKS_LEFT, SOCIAL_LINKS_RIGHT } from '../consts';
+import SocialGlyph from './SocialGlyph.astro';
+---
+
+<div class="hero-bar">
+	<div class="hero-bar__inner">
+		{
+			SOCIAL_LINKS_LEFT.map((link) => (
+				<a class="hero-bar__icon" href={link.href} aria-label={link.label} target="_blank" rel="noreferrer">
+					<span class="hero-bar__icon-viewport">
+						<span class="hero-bar__icon-track">
+							<span class="hero-bar__icon-face">
+								<SocialGlyph id={link.id} />
+							</span>
+							<span class="hero-bar__icon-face">
+								<SocialGlyph id={link.id} />
+							</span>
+						</span>
+					</span>
+				</a>
+			))
+		}
+
+		<div class="hero-bar__mouse" aria-hidden="true">
+			<span class="hero-bar__wheel"></span>
+		</div>
+
+		{
+			SOCIAL_LINKS_RIGHT.map((link) => (
+				<a class="hero-bar__icon" href={link.href} aria-label={link.label} target="_blank" rel="noreferrer">
+					<span class="hero-bar__icon-viewport">
+						<span class="hero-bar__icon-track">
+							<span class="hero-bar__icon-face">
+								<SocialGlyph id={link.id} />
+							</span>
+							<span class="hero-bar__icon-face">
+								<SocialGlyph id={link.id} />
+							</span>
+						</span>
+					</span>
+				</a>
+			))
+		}
+	</div>
+</div>
+
+<style>
+	.hero-bar {
+		position: absolute;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 12;
+		pointer-events: none;
+		width: 100%;
+		padding-bottom: 1.75rem;
+	}
+
+	.hero-bar__inner {
+		display: grid;
+		grid-template-columns: repeat(4, auto);
+		align-items: center;
+		justify-content: space-between;
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+		row-gap: 2rem;
+	}
+
+	.hero-bar__icon {
+		--icon-size: 2.5rem;
+		--glyph-size: 1.175rem;
+		position: relative;
+		z-index: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--icon-size);
+		height: var(--icon-size);
+		border: 0.08rem solid rgb(255 255 255 / 0.16);
+		border-radius: 50%;
+		background-color: rgb(255 255 255 / 8%);
+		color: #fff;
+		pointer-events: auto;
+		transition: background-color 0.2s ease;
+	}
+
+	.hero-bar__icon:hover {
+		background-color: rgb(255 255 255 / 16%);
+	}
+
+	.hero-bar__icon-viewport {
+		display: block;
+		overflow: hidden;
+		width: var(--glyph-size);
+		height: var(--glyph-size);
+		min-height: 0;
+	}
+
+	.hero-bar__icon-track {
+		display: flex;
+		flex-direction: column;
+		transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.hero-bar__icon:hover .hero-bar__icon-track,
+	.hero-bar__icon:focus-visible .hero-bar__icon-track {
+		transform: translateY(calc(-1 * var(--glyph-size)));
+	}
+
+	.hero-bar__icon-face {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 0 0 var(--glyph-size);
+		width: var(--glyph-size);
+		height: var(--glyph-size);
+		overflow: hidden;
+		color: #fff;
+	}
+
+	.hero-bar__icon :global(svg) {
+		width: var(--glyph-size);
+		height: var(--glyph-size);
+	}
+
+	.hero-bar__mouse {
+		position: relative;
+		grid-column: 1 / -1;
+		justify-self: center;
+		order: -1;
+		width: 1.525rem;
+		height: 2.25rem;
+		overflow: hidden;
+		border: 0.08rem solid #6e6e6e;
+		border-radius: 6rem;
+		background-color: rgb(255 255 255 / 8%);
+	}
+
+	.hero-bar__wheel {
+		position: absolute;
+		top: 0.57rem;
+		left: 50%;
+		width: 0.22rem;
+		height: 0.45rem;
+		border-radius: 6rem;
+		background-color: #c8c8c8;
+		transform: translateX(-50%);
+		animation: mouse-scroll 1.8s ease-in-out infinite;
+	}
+
+	@keyframes mouse-scroll {
+		0% {
+			opacity: 1;
+			transform: translateX(-50%) translateY(0);
+		}
+
+		70% {
+			opacity: 0;
+			transform: translateX(-50%) translateY(0.925rem);
+		}
+
+		71% {
+			opacity: 0;
+			transform: translateX(-50%) translateY(0);
+		}
+
+		100% {
+			opacity: 1;
+			transform: translateX(-50%) translateY(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero-bar__wheel {
+			animation: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.hero-bar__icon {
+			--icon-size: 2.75rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.hero-bar__inner {
+			grid-template-columns: repeat(5, auto);
+			row-gap: 0;
+		}
+
+		.hero-bar__mouse {
+			grid-column: auto;
+			order: 0;
+			justify-self: center;
+		}
+	}
+</style>

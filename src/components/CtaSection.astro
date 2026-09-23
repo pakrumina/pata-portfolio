@@ -1,0 +1,542 @@
+---
+import { CTA_LINK, CTA_TITLE, HERO_TRAIL_IMAGES } from '../consts';
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<section class="cta" id="cta" aria-label="Call to action" data-cta>
+	<div class="cta__stage" data-cta-stage>
+		<div class="cta__orbit" aria-hidden="true">
+			{
+				HERO_TRAIL_IMAGES.map((src) => (
+					<figure class="cta__card" data-cta-card>
+						<img class="cta__image" src={src} alt="" />
+					</figure>
+				))
+			}
+		</div>
+
+		<div class="cta__copy" data-cta-copy>
+			<h2 class="cta__title">
+				<span class="cta__title-line">{CTA_TITLE.lead}</span>
+				<span class="cta__title-line cta__title-line--muted">{CTA_TITLE.main}</span>
+			</h2>
+			<a class="cta__button" href={CTA_LINK.href} data-cta-link-hover aria-label={CTA_LINK.label}>
+				<span class="cta__button-mask" aria-hidden="true">
+					{
+						charsOf(CTA_LINK.label).map((char) => (
+							<span class="cta__char-col">
+								<span class="cta__char-track">
+									<span class="cta__char">{char}</span>
+									<span class="cta__char">{char}</span>
+								</span>
+							</span>
+						))
+					}
+				</span>
+			</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.cta {
+		position: relative;
+		width: 100%;
+		isolation: isolate;
+		background-color: var(--color-bg);
+	}
+
+	.cta__stage {
+		position: relative;
+		display: grid;
+		place-items: center;
+		width: 100%;
+		height: 100vh;
+		height: 100svh;
+		overflow: hidden;
+	}
+
+	.cta__orbit {
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+	}
+
+	.cta__card {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		z-index: 1;
+		width: 6rem;
+		height: 6rem;
+		aspect-ratio: 1;
+		margin: 0;
+		overflow: hidden;
+		border-radius: 0.9rem;
+		background-color: #111;
+		transform-origin: center;
+		clip-path: inset(0 round 0.9rem);
+		-webkit-mask-image: -webkit-radial-gradient(white, black);
+		mask-image: radial-gradient(white, black);
+		will-change: transform;
+	}
+
+	.cta__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		border-radius: inherit;
+	}
+
+	.cta__copy {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.5rem;
+		max-width: 18rem;
+		padding-inline: 1.25rem;
+		text-align: center;
+		visibility: hidden;
+	}
+
+	.cta__title {
+		position: relative;
+		z-index: 2;
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		color: #fff;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 2.25rem;
+		line-height: 0.95;
+		letter-spacing: -0.06rem;
+		mix-blend-mode: difference;
+	}
+
+	.cta__title-line {
+		display: block;
+	}
+
+	.cta__title-line--muted {
+		color: #737373;
+	}
+
+	.cta__button {
+		position: relative;
+		z-index: 3;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.9rem 1.6rem;
+		border-radius: 999rem;
+		background-color: #fff;
+		color: #0a0a0a;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		text-decoration: none;
+		isolation: isolate;
+		transition: background-color 0.45s ease;
+	}
+
+	.cta__button-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.cta__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.cta__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.cta__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.cta__button:hover,
+	.cta__button:focus-visible {
+		background-color: #f5f5f5;
+		outline: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cta__button {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.cta__card {
+			width: 9rem;
+			height: 9rem;
+			border-radius: 1.25rem;
+			clip-path: inset(0 round 1.25rem);
+		}
+
+		.cta__copy {
+			max-width: 28rem;
+			gap: 1.75rem;
+		}
+
+		.cta__title {
+			font-size: 4rem;
+			letter-spacing: -0.1rem;
+		}
+
+		.cta__button {
+			padding: 1rem 1.85rem;
+			font-size: 1rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.cta__card {
+			width: 11.5rem;
+			height: 11.5rem;
+		}
+
+		.cta__copy {
+			max-width: 36rem;
+			gap: 2rem;
+		}
+
+		.cta__title {
+			font-size: 5.75rem;
+			letter-spacing: -0.16rem;
+		}
+
+		.cta__button {
+			padding: 1.05rem 2.1rem;
+			font-size: 1.0625rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	let destroyCtaMotion: (() => void) | undefined;
+
+	const SPIRAL_TURNS = 1.15;
+	const RING_TILT = -Math.PI / 4;
+	const RING_FLAT = 0.62;
+
+	function remPx(value: number) {
+		const root = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+		return value * root;
+	}
+
+	function tiltedEllipse(angle: number, major: number, minor: number, tilt: number) {
+		const x0 = Math.cos(angle) * major;
+		const y0 = Math.sin(angle) * minor;
+		const cosT = Math.cos(tilt);
+		const sinT = Math.sin(tilt);
+
+		return {
+			x: x0 * cosT - y0 * sinT,
+			y: x0 * sinT + y0 * cosT,
+		};
+	}
+
+	function landingRing(count: number, width: number, height: number, holeX: number, holeY: number, cardSize: number) {
+		const minDist = cardSize * 1.02 + remPx(0.75);
+		const padX = cardSize * 0.52 + remPx(0.5);
+		const padY = cardSize * 0.5 + remPx(0.2);
+		const limitX = width / 2 - padX;
+		const limitY = height / 2 - padY;
+		const chordR = minDist / (2 * Math.sin(Math.PI / Math.max(count, 2)));
+		const minMinor = Math.max(holeX, holeY);
+
+		let major = Math.max(minMinor / RING_FLAT, chordR);
+		let minor = major * RING_FLAT;
+
+		const make = (nextMajor: number, nextMinor: number) =>
+			Array.from({ length: count }, (_, index) => {
+				const angle = -Math.PI / 2 + (index / count) * Math.PI * 2;
+				return {
+					angle,
+					major: nextMajor,
+					minor: nextMinor,
+					tilt: RING_TILT,
+				};
+			});
+
+		const fits = (nextMajor: number, nextMinor: number) => {
+			for (let index = 0; index < count; index++) {
+				const angle = -Math.PI / 2 + (index / count) * Math.PI * 2;
+				const point = tiltedEllipse(angle, nextMajor, nextMinor, RING_TILT);
+				if (Math.abs(point.x) > limitX || Math.abs(point.y) > limitY) return false;
+			}
+			return true;
+		};
+
+		while ((major > 8 || minor > 8) && !fits(major, minor)) {
+			major *= 0.96;
+			minor = major * RING_FLAT;
+		}
+
+		for (let step = 0; step < 28; step++) {
+			const nextMajor = major * 1.03;
+			const nextMinor = nextMajor * RING_FLAT;
+			if (!fits(nextMajor, nextMinor)) break;
+			major = nextMajor;
+			minor = nextMinor;
+		}
+
+		return make(major, minor);
+	}
+
+	function ctaPose(
+		index: number,
+		count: number,
+		progress: number,
+		landing: { angle: number; major: number; minor: number; tilt: number },
+	) {
+		const mid = (count - 1) / 2;
+		const p = gsap.utils.clamp(0, 1, progress);
+		const grow = gsap.parseEase('power2.inOut')(p);
+
+		const slot = count <= 0 ? 0 : (index / count) * Math.PI * 2;
+		const angle = -Math.PI / 2 + slot + p * SPIRAL_TURNS * Math.PI * 2;
+		const startRadius = 12 + Math.abs(index - mid) * 4;
+		const major = startRadius + (landing.major - startRadius) * grow;
+		const minor = startRadius + (landing.minor - startRadius) * grow;
+		const point = tiltedEllipse(angle, major, minor, landing.tilt * grow);
+
+		const startRotation = (index - mid) * 5;
+		const straighten = gsap.parseEase('sine.inOut')(p);
+
+		return {
+			x: point.x,
+			y: point.y,
+			rotation: startRotation * (1 - straighten),
+			scale: 0.86 + grow * 0.14,
+		};
+	}
+
+	function initCtaMotion() {
+		destroyCtaMotion?.();
+
+		const section = document.querySelector('[data-cta]');
+		const stage = document.querySelector('[data-cta-stage]');
+		const copy = document.querySelector('[data-cta-copy]');
+		const cards = gsap.utils.toArray<HTMLElement>('[data-cta-card]');
+
+		if (!(section instanceof HTMLElement) || !(stage instanceof HTMLElement) || !(copy instanceof HTMLElement) || cards.length === 0) {
+			return;
+		}
+
+		const mm = gsap.matchMedia();
+		const count = cards.length;
+		const lines = gsap.utils.toArray<HTMLElement>('.cta__title-line', copy);
+		const button = copy.querySelector('.cta__button');
+		const state = { p: 0 };
+
+		const applyCards = (progress: number) => {
+			const width = stage.clientWidth;
+			const height = stage.clientHeight;
+			const cardSize = cards[0]?.offsetWidth ?? 0;
+			const holeX = copy.offsetWidth * 0.4 + cardSize * 0.46;
+			const holeY = copy.offsetHeight * 0.4 + cardSize * 0.46;
+			const landings = landingRing(count, width, height, holeX, holeY, cardSize);
+			const isDesktop = width >= remPx(64);
+			let yScale = 1;
+
+			if (isDesktop && cardSize > 0) {
+				const maxY = height / 2 - cardSize * 0.5 - remPx(1.25);
+				let peakY = 0;
+
+				for (let index = 0; index < count; index++) {
+					const landing = landings[index];
+					if (!landing) continue;
+					peakY = Math.max(peakY, Math.abs(ctaPose(index, count, 1, landing).y));
+				}
+
+				if (peakY > maxY && maxY > 0) yScale = maxY / peakY;
+			}
+
+			cards.forEach((card, index) => {
+				const landing = landings[index];
+				if (!landing) return;
+				const pose = ctaPose(index, count, progress, landing);
+				gsap.set(card, {
+					xPercent: -50,
+					yPercent: -50,
+					x: pose.x,
+					y: pose.y * yScale,
+					rotation: pose.rotation,
+					scale: pose.scale,
+					zIndex: index + 1,
+					transformOrigin: '50% 50%',
+					force3D: true,
+				});
+			});
+		};
+
+		const showCopy = () => {
+			gsap.set(copy, { autoAlpha: 1 });
+			gsap.set(lines, { autoAlpha: 1, y: 0 });
+			if (button instanceof HTMLElement) gsap.set(button, { autoAlpha: 1, y: 0, scale: 1 });
+		};
+
+		mm.add('(prefers-reduced-motion: reduce)', () => {
+			applyCards(1);
+			showCopy();
+		});
+
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const localCleanups: Array<() => void> = [];
+			state.p = 0;
+			applyCards(0);
+			gsap.set(copy, { autoAlpha: 1 });
+			gsap.set(lines, { autoAlpha: 0, y: 32 });
+			if (button instanceof HTMLElement) gsap.set(button, { autoAlpha: 0, y: 22, scale: 0.96 });
+
+			if (button instanceof HTMLElement) {
+				const tracks = button.querySelectorAll('.cta__char-track');
+
+				if (tracks.length > 0) {
+					gsap.set(tracks, { yPercent: 0 });
+
+					let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+					const playHover = () => {
+						hoverTl?.kill();
+						hoverTl = gsap.to(tracks, {
+							yPercent: -50,
+							duration: 0.35,
+							ease: 'power3.out',
+							stagger: 0.03,
+							overwrite: true,
+						});
+					};
+
+					const resetHover = () => {
+						hoverTl?.kill();
+						hoverTl = gsap.to(tracks, {
+							yPercent: 0,
+							duration: 0.35,
+							ease: 'power3.out',
+							stagger: 0.03,
+							overwrite: true,
+						});
+					};
+
+					button.addEventListener('mouseenter', playHover);
+					button.addEventListener('mouseleave', resetHover);
+					button.addEventListener('focus', playHover);
+					button.addEventListener('blur', resetHover);
+
+					localCleanups.push(() => {
+						hoverTl?.kill();
+						button.removeEventListener('mouseenter', playHover);
+						button.removeEventListener('mouseleave', resetHover);
+						button.removeEventListener('focus', playHover);
+						button.removeEventListener('blur', resetHover);
+					});
+				}
+			}
+
+			const tl = gsap.timeline({
+				defaults: { ease: 'none' },
+				scrollTrigger: {
+					trigger: section,
+					start: 'top top',
+					end: () => `+=${Math.round(window.innerHeight * 2.15)}`,
+					pin: true,
+					scrub: 1.25,
+					anticipatePin: 1,
+					invalidateOnRefresh: true,
+					onRefresh: () => applyCards(state.p),
+				},
+			});
+
+			tl.to(
+				state,
+				{
+					p: 1,
+					duration: 1,
+					ease: 'none',
+					onUpdate: () => applyCards(state.p),
+				},
+				0,
+			);
+
+			tl.to(
+				lines,
+				{
+					autoAlpha: 1,
+					y: 0,
+					duration: 0.36,
+					stagger: 0.08,
+					ease: 'power3.out',
+				},
+				0.48,
+			);
+
+			if (button instanceof HTMLElement) {
+				tl.to(
+					button,
+					{
+						autoAlpha: 1,
+						y: 0,
+						scale: 1,
+						duration: 0.32,
+						ease: 'power3.out',
+					},
+					0.68,
+				);
+			}
+
+			tl.to({}, { duration: 0.22 });
+
+			const images = stage.querySelectorAll('img');
+			const ready = Array.from(images).map((image) => {
+				if (image.complete) return Promise.resolve();
+				return image.decode?.().catch(() => undefined) ?? Promise.resolve();
+			});
+
+			Promise.all(ready).then(() => ScrollTrigger.refresh());
+
+			return () => {
+				localCleanups.forEach((cleanup) => cleanup());
+				tl.scrollTrigger?.kill();
+				tl.kill();
+			};
+		});
+
+		destroyCtaMotion = () => {
+			mm.revert();
+			destroyCtaMotion = undefined;
+		};
+	}
+
+	initCtaMotion();
+	document.addEventListener('astro:after-swap', initCtaMotion);
+</script>

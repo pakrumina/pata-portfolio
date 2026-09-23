@@ -1,0 +1,430 @@
+---
+import { WORKS_ITEMS } from '../consts';
+---
+
+<ul class="works__grid" data-works-grid>
+	{
+		WORKS_ITEMS.map((work) => (
+			<li class="works__item">
+				<a class="works__card" href={work.href} aria-label={`${work.name} - ${work.service}`}>
+					<div class="works__media">
+						<img class="works__image" src={work.image} alt="" data-works-image />
+						<span class="works__cursor" data-works-cursor aria-hidden="true"></span>
+					</div>
+					<div class="works__meta">
+						<p class="works__label">
+							{work.name}
+							<span class="works__sep" aria-hidden="true">
+								-
+							</span>
+							{work.service}
+						</p>
+						<span class="works__arrow" aria-hidden="true">
+							<span class="works__arrow-mask">
+								<span class="works__arrow-icon" data-works-arrow-current>
+									<svg viewBox="0 0 16 16" fill="none">
+										<path
+											d="M4 12L12 4M12 4H6.5M12 4V9.5"
+											stroke="currentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</span>
+								<span class="works__arrow-icon" data-works-arrow-next>
+									<svg viewBox="0 0 16 16" fill="none">
+										<path
+											d="M4 12L12 4M12 4H6.5M12 4V9.5"
+											stroke="currentColor"
+											stroke-width="1.4"
+											stroke-linecap="round"
+											stroke-linejoin="round"
+										/>
+									</svg>
+								</span>
+							</span>
+						</span>
+					</div>
+				</a>
+			</li>
+		))
+	}
+</ul>
+
+<style>
+	.works__grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+		margin: 3rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.works__item {
+		min-width: 0;
+	}
+
+	.works__card {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		padding: 0.625rem;
+		border: 0.0625rem solid rgb(245 245 245 / 0.14);
+		border-radius: 1.875rem;
+		background-color: transparent;
+		color: inherit;
+		text-decoration: none;
+		transition: background-color 0.45s ease;
+	}
+
+	.works__card:hover,
+	.works__card:focus-visible {
+		background-color: rgb(245 245 245 / 0.045);
+	}
+
+	.works__media {
+		position: relative;
+		isolation: isolate;
+		z-index: 0;
+		width: 100%;
+		aspect-ratio: 4 / 3;
+		overflow: hidden;
+		border-radius: 1.25rem;
+		transform: translateZ(0);
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		-webkit-mask-image: -webkit-radial-gradient(white, black);
+		mask-image: radial-gradient(white, black);
+		clip-path: inset(0 round 1.25rem);
+	}
+
+	.works__media::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		border-radius: inherit;
+		background-color: rgb(10 10 10 / 0.38);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.45s ease;
+	}
+
+	.works__card:hover .works__media::after,
+	.works__card:focus-visible .works__media::after {
+		opacity: 1;
+	}
+
+	.works__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		border-radius: inherit;
+		-webkit-backface-visibility: hidden;
+		backface-visibility: hidden;
+		transform: translateZ(0);
+	}
+
+	.works__cursor {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 999rem;
+		background-color: #fff;
+		mix-blend-mode: difference;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.works__meta {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		padding: 1rem 0.25rem 0.35rem;
+	}
+
+	.works__label {
+		margin: 0;
+		padding-inline-start: 0.5rem;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 0.9375rem;
+		line-height: 1.3;
+		letter-spacing: -0.01rem;
+	}
+
+	.works__sep {
+		margin-inline: 0.35rem;
+	}
+
+	.works__arrow {
+		display: grid;
+		flex: 0 0 auto;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		overflow: hidden;
+		border: 0.0625rem solid rgb(245 245 245 / 0.28);
+		border-radius: 999rem;
+		color: var(--color-fg);
+		will-change: transform;
+	}
+
+	.works__arrow-mask {
+		position: relative;
+		overflow: hidden;
+		width: 0.75rem;
+		height: 0.75rem;
+	}
+
+	.works__arrow-icon {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+	}
+
+	.works__arrow-icon svg {
+		display: block;
+		width: 0.75rem;
+		height: 0.75rem;
+	}
+
+	@media (min-width: 48rem) {
+		.works__grid {
+			grid-template-columns: 1fr 1fr;
+			gap: 1.5rem;
+			margin-top: 4rem;
+		}
+
+		.works__label {
+			font-size: 1rem;
+		}
+
+		.works__arrow {
+			width: 2.25rem;
+			height: 2.25rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.works__card,
+		.works__media::after {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.works__grid {
+			gap: 1.75rem;
+			margin-top: 5rem;
+		}
+
+		.works__label {
+			font-size: 1.0625rem;
+		}
+	}
+</style>
+
+<style is:global>
+	.works__cursor {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		width: 1.5rem;
+		height: 1.5rem;
+		border-radius: 999rem;
+		background-color: #fff;
+		mix-blend-mode: difference;
+		opacity: 0;
+		pointer-events: none;
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+	gsap.registerPlugin(ScrollTrigger);
+
+	let destroyWorksGrid: (() => void) | undefined;
+
+	function initWorksGrid() {
+		destroyWorksGrid?.();
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const cleanups: Array<() => void> = [];
+			const grids = document.querySelectorAll('[data-works-grid]');
+
+			grids.forEach((grid) => {
+				if (!(grid instanceof HTMLElement)) return;
+
+				const images = grid.querySelectorAll<HTMLElement>('[data-works-image]');
+
+				images.forEach((image) => {
+					const media = image.closest('.works__media');
+					if (!(media instanceof HTMLElement)) return;
+
+					gsap.fromTo(
+						image,
+						{ yPercent: -4, scale: 1.08 },
+						{
+							yPercent: 4,
+							scale: 1.08,
+							ease: 'none',
+							force3D: false,
+							scrollTrigger: {
+								trigger: media,
+								start: 'top bottom',
+								end: 'bottom top',
+								scrub: 0.7,
+							},
+						},
+					);
+				});
+
+				grid.querySelectorAll('.works__card').forEach((card) => {
+					const current = card.querySelector<HTMLElement>('[data-works-arrow-current]');
+					const next = card.querySelector<HTMLElement>('[data-works-arrow-next]');
+					const arrow = card.querySelector<HTMLElement>('.works__arrow');
+					const media = card.querySelector<HTMLElement>('.works__media');
+					if (!current || !next || !arrow) return;
+
+					gsap.set(current, { xPercent: 0, yPercent: 0 });
+					gsap.set(next, { xPercent: -110, yPercent: 110 });
+					gsap.set(arrow, { scale: 1, transformOrigin: '50% 50%' });
+
+					let hoverTl: ReturnType<typeof gsap.timeline> | undefined;
+					let cursor = card.querySelector<HTMLElement>('[data-works-cursor]');
+
+					if (!cursor && media) {
+						cursor = document.createElement('span');
+						cursor.className = 'works__cursor';
+						cursor.setAttribute('data-works-cursor', '');
+						cursor.setAttribute('aria-hidden', 'true');
+						const scope = [...media.attributes].find((attr) => attr.name.startsWith('data-astro-cid'));
+						if (scope) cursor.setAttribute(scope.name, '');
+						media.appendChild(cursor);
+					}
+
+					const playHover = () => {
+						hoverTl?.kill();
+						hoverTl = gsap.timeline({ defaults: { duration: 0.4, ease: 'power3.out', overwrite: true } });
+						hoverTl.to(current, { xPercent: 110, yPercent: -110 }, 0);
+						hoverTl.to(next, { xPercent: 0, yPercent: 0 }, 0);
+						hoverTl.to(arrow, { scale: 1.1 }, 0);
+					};
+
+					const resetHover = () => {
+						hoverTl?.kill();
+						hoverTl = gsap.timeline({ defaults: { duration: 0.4, ease: 'power3.out', overwrite: true } });
+						hoverTl.to(current, { xPercent: 0, yPercent: 0 }, 0);
+						hoverTl.to(next, { xPercent: -110, yPercent: 110 }, 0);
+						hoverTl.to(arrow, { scale: 1 }, 0);
+					};
+
+					card.addEventListener('mouseenter', playHover);
+					card.addEventListener('mouseleave', resetHover);
+					card.addEventListener('focus', playHover);
+					card.addEventListener('blur', resetHover);
+
+					cleanups.push(() => {
+						hoverTl?.kill();
+						card.removeEventListener('mouseenter', playHover);
+						card.removeEventListener('mouseleave', resetHover);
+						card.removeEventListener('focus', playHover);
+						card.removeEventListener('blur', resetHover);
+					});
+
+					if (cursor && media) {
+						const followVars = { duration: 0.4, ease: 'power3.out', force3D: false };
+						gsap.set(cursor, {
+							xPercent: -50,
+							yPercent: -50,
+							x: 0,
+							y: 0,
+							scale: 0,
+							opacity: 0,
+							force3D: false,
+						});
+
+						const xTo = gsap.quickTo(cursor, 'x', followVars);
+						const yTo = gsap.quickTo(cursor, 'y', followVars);
+
+						const pointInMedia = (clientX: number, clientY: number) => {
+							const rect = media.getBoundingClientRect();
+							return {
+								x: gsap.utils.clamp(0, rect.width, clientX - rect.left),
+								y: gsap.utils.clamp(0, rect.height, clientY - rect.top),
+							};
+						};
+
+						const showCursor = (clientX: number, clientY: number, immediate = false) => {
+							const { x, y } = pointInMedia(clientX, clientY);
+							if (immediate) gsap.set(cursor, { x, y, force3D: false });
+							else {
+								xTo(x);
+								yTo(y);
+							}
+							gsap.to(cursor, {
+								scale: 1,
+								opacity: 1,
+								duration: 0.3,
+								ease: 'power3.out',
+								overwrite: 'auto',
+								force3D: false,
+							});
+						};
+
+						const onEnter = (event: MouseEvent) => showCursor(event.clientX, event.clientY, true);
+						const onMove = (event: MouseEvent) => showCursor(event.clientX, event.clientY);
+						const onLeave = () => {
+							gsap.to(cursor, {
+								scale: 0,
+								opacity: 0,
+								duration: 0.25,
+								ease: 'power3.in',
+								overwrite: 'auto',
+								force3D: false,
+							});
+						};
+
+						card.addEventListener('mouseenter', onEnter);
+						card.addEventListener('mousemove', onMove);
+						card.addEventListener('mouseleave', onLeave);
+
+						cleanups.push(() => {
+							gsap.killTweensOf(cursor);
+							card.removeEventListener('mouseenter', onEnter);
+							card.removeEventListener('mousemove', onMove);
+							card.removeEventListener('mouseleave', onLeave);
+						});
+					}
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyWorksGrid = () => {
+			mm.revert();
+			destroyWorksGrid = undefined;
+		};
+	}
+
+	initWorksGrid();
+	document.addEventListener('astro:after-swap', initWorksGrid);
+</script>

@@ -1,0 +1,154 @@
+---
+import { PARTNER_LOGOS, PARTNERS_LABEL } from '../consts';
+---
+
+<div class="partners">
+	<p class="partners__label">{PARTNERS_LABEL}</p>
+	<div class="partners__viewport" aria-label={PARTNERS_LABEL}>
+		<div class="partners__track" data-partners-track>
+			{
+				[0, 1, 2].map((copy) => (
+					<ul
+						class="partners__list"
+						data-partners-list={copy === 0 ? true : undefined}
+						aria-hidden={copy === 0 ? undefined : 'true'}
+					>
+						{PARTNER_LOGOS.map((logo) => (
+							<li class="partners__item">
+								<img class="partners__logo" src={logo.src} alt={copy === 0 ? logo.alt : ''} />
+							</li>
+						))}
+					</ul>
+				))
+			}
+		</div>
+	</div>
+</div>
+
+<script>
+	function initPartnersMarquee() {
+		const track = document.querySelector('[data-partners-track]');
+		const list = document.querySelector('[data-partners-list]');
+		if (!(track instanceof HTMLElement) || !(list instanceof HTMLElement)) return;
+
+		const applyShift = () => {
+			const width = list.getBoundingClientRect().width;
+			if (width === 0) return;
+			track.style.setProperty('--partners-shift', `${width}px`);
+		};
+
+		applyShift();
+		list.querySelectorAll('img').forEach((img) => {
+			if (!img.complete) img.addEventListener('load', applyShift, { once: true });
+		});
+
+		const observer = new ResizeObserver(applyShift);
+		observer.observe(list);
+	}
+
+	initPartnersMarquee();
+	document.addEventListener('astro:after-swap', initPartnersMarquee);
+</script>
+
+<style>
+	.partners {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 3.5rem;
+		width: 100%;
+	}
+
+	.partners__label {
+		margin: 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 0.75rem;
+		line-height: 1.2;
+		letter-spacing: 0.18rem;
+		text-align: center;
+		text-transform: uppercase;
+	}
+
+	.partners__viewport {
+		width: 100%;
+		max-width: 70rem;
+		margin-inline: auto;
+		overflow: hidden;
+		mask-image: linear-gradient(
+			to right,
+			transparent,
+			#000 7.5%,
+			#000 92.5%,
+			transparent
+		);
+		-webkit-mask-image: linear-gradient(
+			to right,
+			transparent,
+			#000 7.5%,
+			#000 92.5%,
+			transparent
+		);
+	}
+
+	.partners__track {
+		display: flex;
+		width: max-content;
+		animation: partners-marquee 28s linear infinite;
+	}
+
+	.partners__list {
+		display: flex;
+		flex: 0 0 auto;
+		align-items: center;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.partners__item {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+		padding-inline: 1.75rem;
+	}
+
+	.partners__logo {
+		display: block;
+		height: 2.125rem;
+		width: auto;
+		max-width: 11.25rem;
+		object-fit: contain;
+	}
+
+	@keyframes partners-marquee {
+		from {
+			transform: translate3d(0, 0, 0);
+		}
+		to {
+			transform: translate3d(calc(-1 * var(--partners-shift, 50%)), 0, 0);
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.partners {
+			gap: 4rem;
+		}
+
+		.partners__item {
+			padding-inline: 3.25rem;
+		}
+
+		.partners__logo {
+			height: 2.625rem;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.partners__track {
+			animation: none;
+		}
+	}
+</style>

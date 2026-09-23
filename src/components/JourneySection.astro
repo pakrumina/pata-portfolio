@@ -1,0 +1,436 @@
+---
+import { CTA_LINK, JOURNEY_HEADLINE, JOURNEY_IMAGES, JOURNEY_LEAD, JOURNEY_NOTE } from '../consts';
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<section class="journey" id="journey" aria-label="Our journey">
+	<div class="journey__inner">
+		<figure class="journey__figure">
+			<div class="journey__stage">
+				{
+					JOURNEY_IMAGES.map((src, index) => (
+						<img
+							class="journey__image"
+							src={src}
+							alt=""
+							data-journey-image
+							aria-hidden={index === 0 ? undefined : 'true'}
+						/>
+					))
+				}
+			</div>
+		</figure>
+		<p class="journey__lead">{JOURNEY_LEAD}</p>
+		<h2 class="journey__headline" data-journey-headline>
+			{JOURNEY_HEADLINE.lead}<span class="journey__headline-muted">{JOURNEY_HEADLINE.muted}</span>
+		</h2>
+		<div class="journey__aside">
+			<p class="journey__note">{JOURNEY_NOTE}</p>
+			<a
+				class="journey__link"
+				href={CTA_LINK.href}
+				data-journey-link-hover
+				aria-label={CTA_LINK.label}
+			>
+				<span class="journey__link-mask" aria-hidden="true">
+					{
+						charsOf(CTA_LINK.label).map((char) => (
+							<span class="journey__char-col">
+								<span class="journey__char-track">
+									<span class="journey__char">{char}</span>
+									<span class="journey__char">{char}</span>
+								</span>
+							</span>
+						))
+					}
+				</span>
+				<span class="journey__link-arrow" aria-hidden="true">↗</span>
+				<span class="journey__link-underline" aria-hidden="true">
+					<span class="journey__link-underline-fill"></span>
+				</span>
+			</a>
+		</div>
+	</div>
+</section>
+
+<style>
+	.journey {
+		width: 100%;
+		padding-block: 8rem 5rem;
+		background-color: var(--color-bg);
+		color: var(--color-fg);
+	}
+
+	.journey__inner {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2rem 1.5rem;
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.journey__figure {
+		margin: 0;
+		width: 10.5rem;
+		overflow: hidden;
+		border-radius: 1.25rem;
+	}
+
+	.journey__stage {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 1 / 1;
+	}
+
+	.journey__image {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		opacity: 0;
+	}
+
+	.journey__image:first-child {
+		opacity: 1;
+	}
+
+	.journey__lead,
+	.journey__note {
+		margin: 0;
+		max-width: 22rem;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.8125rem;
+		line-height: 1.5;
+		letter-spacing: -0.01rem;
+	}
+
+	.journey__aside {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+		max-width: 22rem;
+	}
+
+	.journey__link {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		width: fit-content;
+		border-bottom: 0.0625rem solid rgb(245 245 245 / 0.35);
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 1rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		text-decoration: none;
+	}
+
+	.journey__link-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.journey__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.journey__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.journey__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.journey__link-underline {
+		position: absolute;
+		right: 0;
+		bottom: -0.0625rem;
+		left: 0;
+		height: 0.0625rem;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.journey__link-underline-fill {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background-color: #fff;
+		transform: translateX(-100%);
+		transition: transform 0.45s ease;
+	}
+
+	.journey__link:hover .journey__link-underline-fill,
+	.journey__link:focus-visible .journey__link-underline-fill {
+		transform: translateX(0);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.journey__link-underline-fill {
+			transition: none;
+		}
+	}
+
+	.journey__link-arrow {
+		font-size: 0.9rem;
+		line-height: 1;
+	}
+
+	.journey__headline {
+		margin: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 1.75rem;
+		line-height: 1.08;
+		letter-spacing: -0.05rem;
+	}
+
+	.journey__headline :global(.journey-headline-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.journey__headline-muted {
+		color: #737373;
+	}
+
+	@media (min-width: 48rem) {
+		.journey {
+			padding-block: 9.5rem 6rem;
+		}
+
+		.journey__inner {
+			grid-template-columns: 12.5rem 1fr minmax(14rem, 20rem);
+			grid-template-areas:
+				'figure . lead'
+				'title title title'
+				'. . note';
+			column-gap: 2rem;
+			row-gap: 4rem;
+			padding-inline: 2rem;
+			align-items: start;
+		}
+
+		.journey__figure {
+			grid-area: figure;
+			width: 12.5rem;
+		}
+
+		.journey__lead {
+			grid-area: lead;
+			justify-self: end;
+			max-width: 18.5rem;
+			padding-top: 0.35rem;
+		}
+
+		.journey__headline {
+			grid-area: title;
+			font-size: 3rem;
+			letter-spacing: -0.08rem;
+		}
+
+		.journey__aside {
+			grid-area: note;
+			justify-self: end;
+			max-width: 18.5rem;
+		}
+
+		.journey__note {
+			max-width: none;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.journey {
+			padding-block: 12.5rem 7rem;
+		}
+
+		.journey__inner {
+			grid-template-columns: 14.5rem 1fr minmax(16rem, 22rem);
+			column-gap: 2.5rem;
+			row-gap: 5rem;
+			padding-inline: 2.5rem;
+		}
+
+		.journey__figure {
+			width: 14.5rem;
+		}
+
+		.journey__lead,
+		.journey__aside {
+			max-width: 20rem;
+		}
+
+		.journey__lead,
+		.journey__note {
+			font-size: 0.875rem;
+		}
+
+		.journey__headline {
+			font-size: 5rem;
+			letter-spacing: -0.14rem;
+			line-height: 1.02;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyJourneyMotion: (() => void) | undefined;
+
+	function initJourneyMotion() {
+		destroyJourneyMotion?.();
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const headline = document.querySelector('[data-journey-headline]');
+			const images = gsap.utils.toArray<HTMLElement>('[data-journey-image]');
+			const cleanups: Array<() => void> = [];
+
+			if (images.length > 1) {
+				gsap.set(images, { autoAlpha: 0 });
+				gsap.set(images[0], { autoAlpha: 1 });
+
+				let activeIndex = 0;
+				let loopCall: gsap.core.Tween | undefined;
+
+				const playNext = () => {
+					const nextIndex = (activeIndex + 1) % images.length;
+
+					gsap.to(images[activeIndex], {
+						autoAlpha: 0,
+						duration: 1,
+						ease: 'power2.inOut',
+						overwrite: true,
+					});
+					gsap.to(images[nextIndex], {
+						autoAlpha: 1,
+						duration: 1,
+						ease: 'power2.inOut',
+						overwrite: true,
+					});
+
+					activeIndex = nextIndex;
+					loopCall = gsap.delayedCall(1, playNext);
+				};
+
+				loopCall = gsap.delayedCall(1, playNext);
+
+				cleanups.push(() => {
+					loopCall?.kill();
+					gsap.killTweensOf(images);
+				});
+			}
+
+			if (headline instanceof HTMLElement) {
+				const split = SplitText.create(headline, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'journey-headline-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: headline,
+								start: 'top 80%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				cleanups.push(() => split.revert());
+			}
+
+			document.querySelectorAll('[data-journey-link-hover]').forEach((link) => {
+				const tracks = link.querySelectorAll('.journey__char-track');
+				if (tracks.length === 0) return;
+
+				gsap.set(tracks, { yPercent: 0 });
+
+				let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+				const playHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: -50,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				const resetHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: 0,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				link.addEventListener('mouseenter', playHover);
+				link.addEventListener('mouseleave', resetHover);
+				link.addEventListener('focus', playHover);
+				link.addEventListener('blur', resetHover);
+
+				cleanups.push(() => {
+					hoverTl?.kill();
+					link.removeEventListener('mouseenter', playHover);
+					link.removeEventListener('mouseleave', resetHover);
+					link.removeEventListener('focus', playHover);
+					link.removeEventListener('blur', resetHover);
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyJourneyMotion = () => {
+			mm.revert();
+			destroyJourneyMotion = undefined;
+		};
+	}
+
+	initJourneyMotion();
+	document.addEventListener('astro:after-swap', initJourneyMotion);
+</script>

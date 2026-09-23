@@ -1,0 +1,25 @@
+---
+import ProjectCase from '../../components/ProjectCase.astro';
+import ProjectNextSection from '../../components/ProjectNextSection.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { WORKS_ITEMS } from '../../consts';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+	const projects = await getCollection('projects');
+	return projects.map((project) => ({
+		params: { slug: project.id },
+		props: { project },
+	}));
+}
+
+const { project } = Astro.props;
+const currentHref = `/projects/${project.id}`;
+const currentIndex = WORKS_ITEMS.findIndex((item) => item.href === currentHref);
+const nextWork = WORKS_ITEMS[(currentIndex + 1) % WORKS_ITEMS.length];
+---
+
+<BaseLayout title={project.data.title} description={project.data.description}>
+	<ProjectCase project={project} />
+	<ProjectNextSection name={nextWork.name} href={nextWork.href} />
+</BaseLayout>

@@ -1,0 +1,437 @@
+---
+import {
+	LICENSES_DESCRIPTION,
+	LICENSES_INTRO,
+	LICENSES_KICKER,
+	LICENSES_SECTIONS,
+	LICENSES_TITLE,
+} from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<BaseLayout title="Licenses" description={LICENSES_DESCRIPTION}>
+	<main class="licenses">
+		<div class="licenses__inner">
+			<header class="licenses__hero">
+				<p class="licenses__kicker">{LICENSES_KICKER}</p>
+				<h1 class="licenses__title" data-licenses-title>{LICENSES_TITLE}</h1>
+				<p class="licenses__intro">{LICENSES_INTRO}</p>
+			</header>
+
+			{
+				LICENSES_SECTIONS.map((section) => (
+					<section class="licenses__block">
+						<h2 class="licenses__heading" data-licenses-heading>
+							{section.title}
+						</h2>
+						<p class="licenses__copy">{section.copy}</p>
+						<div class="licenses__links">
+							{section.links.map((link) => (
+								<a
+									class="licenses__link"
+									href={link.href}
+									target="_blank"
+									rel="noreferrer"
+									data-licenses-link-hover
+									aria-label={`${link.label} (opens in a new tab)`}
+								>
+									<span class="licenses__link-mask" aria-hidden="true">
+										{charsOf(link.label).map((char) => (
+											<span class="licenses__char-col">
+												<span class="licenses__char-track">
+													<span class="licenses__char">{char}</span>
+													<span class="licenses__char">{char}</span>
+												</span>
+											</span>
+										))}
+									</span>
+									<span class="licenses__link-arrow" aria-hidden="true">↗</span>
+									<span class="licenses__link-underline" aria-hidden="true">
+										<span class="licenses__link-underline-fill"></span>
+									</span>
+								</a>
+							))}
+						</div>
+					</section>
+				))
+			}
+		</div>
+	</main>
+</BaseLayout>
+
+<style>
+	.licenses {
+		width: 100%;
+		padding-block: 11rem 5rem;
+		background-color: var(--color-bg);
+	}
+
+	.licenses__inner {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+		text-align: left;
+	}
+
+	.licenses__hero,
+	.licenses__block {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		width: 100%;
+		max-width: 42rem;
+	}
+
+	.licenses__kicker {
+		margin: 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 0.6875rem;
+		line-height: 1;
+		letter-spacing: 0.16rem;
+		text-transform: uppercase;
+	}
+
+	.licenses__title {
+		margin: 1.25rem 0 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 4.125rem;
+		line-height: 0.9;
+		letter-spacing: -0.06rem;
+	}
+
+	.licenses__title :global(.licenses-title-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.licenses__intro {
+		margin: 1.5rem 0 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+	}
+
+	.licenses__block {
+		padding-block: 3.5rem;
+		border-top: 0.0625rem solid rgb(245 245 245 / 0.12);
+	}
+
+	.licenses__block:first-of-type {
+		margin-top: 4rem;
+	}
+
+	.licenses__heading {
+		margin: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 2.5rem;
+		line-height: 0.95;
+		letter-spacing: -0.06rem;
+	}
+
+	.licenses__heading :global(.licenses-heading-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.licenses__copy {
+		margin: 1.25rem 0 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+	}
+
+	.licenses__links {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 1.25rem 1.75rem;
+		margin-top: 1.5rem;
+	}
+
+	.licenses__link {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		width: fit-content;
+		border-bottom: 0.0625rem solid rgb(245 245 245 / 0.35);
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 0.875rem;
+		line-height: 1.4;
+		letter-spacing: 0.08rem;
+		text-decoration: none;
+		text-transform: uppercase;
+	}
+
+	.licenses__link-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.licenses__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.licenses__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.licenses__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.licenses__link-underline {
+		position: absolute;
+		right: 0;
+		bottom: -0.0625rem;
+		left: 0;
+		height: 0.0625rem;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.licenses__link-underline-fill {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background-color: #fff;
+		transform: translateX(-100%);
+		transition: transform 0.45s ease;
+	}
+
+	.licenses__link:hover .licenses__link-underline-fill,
+	.licenses__link:focus-visible .licenses__link-underline-fill {
+		transform: translateX(0);
+	}
+
+	.licenses__link-arrow {
+		font-size: 0.9rem;
+		line-height: 1;
+		letter-spacing: 0;
+		text-transform: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.licenses__link-underline-fill {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.licenses {
+			padding-block: 12rem 6rem;
+		}
+
+		.licenses__inner {
+			padding-inline: 2rem;
+		}
+
+		.licenses__hero,
+		.licenses__block {
+			max-width: 46rem;
+		}
+
+		.licenses__title {
+			font-size: 6.5rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.licenses__intro,
+		.licenses__copy {
+			font-size: 1rem;
+		}
+
+		.licenses__heading {
+			font-size: 3.5rem;
+			letter-spacing: -0.08rem;
+		}
+
+		.licenses__block {
+			padding-block: 4.5rem;
+		}
+
+		.licenses__block:first-of-type {
+			margin-top: 5rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.licenses {
+			padding-block: 13rem 7rem;
+		}
+
+		.licenses__inner {
+			padding-inline: 2.5rem;
+		}
+
+		.licenses__title {
+			font-size: 8.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.licenses__heading {
+			font-size: 4.5rem;
+			letter-spacing: -0.1rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyLicensesMotion: (() => void) | undefined;
+
+	function initLicensesMotion() {
+		destroyLicensesMotion?.();
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const cleanups: Array<() => void> = [];
+
+			const page = document.querySelector('.licenses');
+			const title = document.querySelector('[data-licenses-title]');
+
+			if (page instanceof HTMLElement && title instanceof HTMLElement) {
+				const split = SplitText.create(title, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'licenses-title-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: page,
+								start: 'top 80%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				cleanups.push(() => split.revert());
+			}
+
+			document.querySelectorAll('[data-licenses-heading]').forEach((heading) => {
+				if (!(heading instanceof HTMLElement)) return;
+
+				const split = SplitText.create(heading, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'licenses-heading-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: heading,
+								start: 'top 85%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				cleanups.push(() => split.revert());
+			});
+
+			document.querySelectorAll('[data-licenses-link-hover]').forEach((link) => {
+				const tracks = link.querySelectorAll('.licenses__char-track');
+				if (tracks.length === 0) return;
+
+				gsap.set(tracks, { yPercent: 0 });
+
+				let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+				const playHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: -50,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				const resetHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: 0,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				link.addEventListener('mouseenter', playHover);
+				link.addEventListener('mouseleave', resetHover);
+				link.addEventListener('focus', playHover);
+				link.addEventListener('blur', resetHover);
+
+				cleanups.push(() => {
+					hoverTl?.kill();
+					link.removeEventListener('mouseenter', playHover);
+					link.removeEventListener('mouseleave', resetHover);
+					link.removeEventListener('focus', playHover);
+					link.removeEventListener('blur', resetHover);
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyLicensesMotion = () => {
+			mm.revert();
+			destroyLicensesMotion = undefined;
+		};
+	}
+
+	initLicensesMotion();
+	document.addEventListener('astro:after-swap', initLicensesMotion);
+</script>

@@ -1,0 +1,342 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { BLOG_ALL_POSTS, BLOG_READ_MORE_TITLE } from '../consts';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<section class="more" id="read-more" aria-label="Read more posts" data-more>
+	<div class="more__inner">
+		<div class="more__rule" aria-hidden="true"></div>
+		<header class="more__header">
+			<h2 class="more__title">
+				<span class="more__title-lead" data-more-reveal>{BLOG_READ_MORE_TITLE.lead}</span>
+				<span class="more__title-main" data-more-reveal>{BLOG_READ_MORE_TITLE.main}</span>
+			</h2>
+			<a
+				class="more__button"
+				href={BLOG_ALL_POSTS.href}
+				data-more-link-hover
+				aria-label={BLOG_ALL_POSTS.label}
+			>
+				<span class="more__button-mask" aria-hidden="true">
+					{
+						charsOf(BLOG_ALL_POSTS.label).map((char) => (
+							<span class="more__char-col">
+								<span class="more__char-track">
+									<span class="more__char">{char}</span>
+									<span class="more__char">{char}</span>
+								</span>
+							</span>
+						))
+					}
+				</span>
+			</a>
+		</header>
+
+		<ul class="more__grid">
+			{
+				posts.map((post) => (
+					<li class="more__item">
+						<BlogCard post={post} heading="h3" />
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.more {
+		width: 100%;
+		padding-block: 0 5rem;
+		background-color: var(--color-bg);
+	}
+
+	.more__inner {
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.more__rule {
+		width: 100%;
+		height: 0.0625rem;
+		background-color: rgb(245 245 245 / 0.08);
+	}
+
+	.more__header {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1.5rem;
+		margin-top: 4.5rem;
+	}
+
+	.more__title {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		min-width: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 2.75rem;
+		line-height: 0.95;
+		letter-spacing: -0.06rem;
+	}
+
+	.more__title-main {
+		color: #737373;
+	}
+
+	.more__title :global(.more-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.more__button {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 0.08em;
+		padding: 0.9rem 1.6rem;
+		border-radius: 999rem;
+		background-color: #fff;
+		color: #0a0a0a;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		text-decoration: none;
+		isolation: isolate;
+		transition: background-color 0.45s ease;
+	}
+
+	.more__button-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.more__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.more__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.more__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.more__button:hover,
+	.more__button:focus-visible {
+		background-color: #f5f5f5;
+		outline: none;
+	}
+
+	.more__grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+		margin: 2.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.more__item {
+		min-width: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.more__button {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.more {
+			padding-block: 0 6rem;
+		}
+
+		.more__inner {
+			padding-inline: 2rem;
+		}
+
+		.more__header {
+			margin-top: 5.5rem;
+		}
+
+		.more__title {
+			font-size: 4.5rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.more__button {
+			padding: 1rem 1.85rem;
+			font-size: 1rem;
+		}
+
+		.more__grid {
+			grid-template-columns: 1fr 1fr;
+			gap: 1.5rem;
+			margin-top: 3.5rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.more {
+			padding-block: 0 7rem;
+		}
+
+		.more__inner {
+			padding-inline: 2.5rem;
+		}
+
+		.more__header {
+			margin-top: 6.5rem;
+		}
+
+		.more__title {
+			font-size: 6.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.more__button {
+			padding: 1.05rem 2.1rem;
+			font-size: 1.0625rem;
+		}
+
+		.more__grid {
+			gap: 1.75rem;
+			margin-top: 4.5rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyMoreMotion: (() => void) | undefined;
+
+	function initMoreMotion() {
+		destroyMoreMotion?.();
+
+		const section = document.querySelector('[data-more]');
+		if (!(section instanceof HTMLElement)) return;
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const cleanups: Array<() => void> = [];
+			const header = section.querySelector('.more__header');
+			const revealTargets = section.querySelectorAll('[data-more-reveal]');
+
+			if (header instanceof HTMLElement && revealTargets.length > 0) {
+				const split = SplitText.create(revealTargets, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'more-reveal-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: header,
+								start: 'top 80%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				cleanups.push(() => split.revert());
+			}
+
+			section.querySelectorAll('[data-more-link-hover]').forEach((link) => {
+				const tracks = link.querySelectorAll('.more__char-track');
+				if (tracks.length === 0) return;
+
+				gsap.set(tracks, { yPercent: 0 });
+
+				let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+				const playHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: -50,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				const resetHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: 0,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				link.addEventListener('mouseenter', playHover);
+				link.addEventListener('mouseleave', resetHover);
+				link.addEventListener('focus', playHover);
+				link.addEventListener('blur', resetHover);
+
+				cleanups.push(() => {
+					hoverTl?.kill();
+					link.removeEventListener('mouseenter', playHover);
+					link.removeEventListener('mouseleave', resetHover);
+					link.removeEventListener('focus', playHover);
+					link.removeEventListener('blur', resetHover);
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyMoreMotion = () => {
+			mm.revert();
+			destroyMoreMotion = undefined;
+		};
+	}
+
+	initMoreMotion();
+	document.addEventListener('astro:after-swap', initMoreMotion);
+</script>

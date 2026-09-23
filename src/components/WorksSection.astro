@@ -1,0 +1,164 @@
+---
+import { WORKS_INDEX, WORKS_TITLE } from '../consts';
+import WorksGrid from './WorksGrid.astro';
+---
+
+<section class="works" id="work" aria-label="Selected works">
+	<div class="works__inner">
+		<header class="works__header">
+			<h2 class="works__title">
+				<span class="works__title-lead" data-works-reveal>{WORKS_TITLE.lead}</span>
+				<span class="works__title-main" data-works-reveal>{WORKS_TITLE.main}</span>
+			</h2>
+			<p class="works__index" data-works-reveal>{WORKS_INDEX}</p>
+		</header>
+
+		<WorksGrid />
+	</div>
+</section>
+
+<style>
+	.works {
+		width: 100%;
+		padding-block: 4rem 8rem;
+		background-color: var(--color-bg);
+	}
+
+	.works__inner {
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.works__header {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1.5rem;
+	}
+
+	.works__title {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 3.375rem;
+		line-height: 1;
+		letter-spacing: -0.06rem;
+	}
+
+	.works__title-main {
+		color: #737373;
+	}
+
+	.works__title :global(.works-reveal-line),
+	.works__index :global(.works-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.works__index {
+		margin: 0;
+		color: #737373;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 1.125rem;
+		line-height: 1;
+		letter-spacing: -0.02rem;
+		text-transform: uppercase;
+		white-space: nowrap;
+	}
+
+	@media (min-width: 48rem) {
+		.works {
+			padding-block: 5rem 8rem;
+		}
+
+		.works__title {
+			font-size: 6.5rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.works__index {
+			font-size: 3.75rem;
+			letter-spacing: -0.08rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.works__inner {
+			padding-inline: 2rem;
+		}
+
+		.works {
+			padding-block: 6rem 10rem;
+		}
+
+		.works__title {
+			font-size: 8.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.works__index {
+			font-size: 6rem;
+			letter-spacing: -0.14rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyWorksMotion: (() => void) | undefined;
+
+	function initWorksMotion() {
+		destroyWorksMotion?.();
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const header = document.querySelector('.works__header');
+			const revealTargets = document.querySelectorAll('[data-works-reveal]');
+
+			if (!(header instanceof HTMLElement) || revealTargets.length === 0) {
+				return;
+			}
+
+			const split = SplitText.create(revealTargets, {
+				type: 'lines',
+				mask: 'lines',
+				autoSplit: true,
+				aria: 'auto',
+				linesClass: 'works-reveal-line',
+				onSplit(self) {
+					return gsap.from(self.lines, {
+						yPercent: 110,
+						duration: 0.95,
+						ease: 'power3.out',
+						stagger: 0.12,
+						scrollTrigger: {
+							trigger: header,
+							start: 'top 80%',
+							once: true,
+						},
+					});
+				},
+			});
+
+			return () => split.revert();
+		});
+
+		destroyWorksMotion = () => {
+			mm.revert();
+			destroyWorksMotion = undefined;
+		};
+	}
+
+	initWorksMotion();
+	document.addEventListener('astro:after-swap', initWorksMotion);
+</script>

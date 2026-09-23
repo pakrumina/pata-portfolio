@@ -1,0 +1,26 @@
+---
+import Navbar from '../components/Navbar.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHead from '../components/SiteHead.astro';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	pageTitle?: string;
+	description?: string;
+}
+
+const { title, pageTitle, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" id="top">
+	<head>
+		<SiteHead title={title} pageTitle={pageTitle} description={description} />
+	</head>
+	<body>
+		<Navbar />
+		<slot />
+		<SiteFooter />
+	</body>
+</html>

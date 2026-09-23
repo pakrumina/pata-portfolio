@@ -1,0 +1,368 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import { readingLabel, readingMinutes } from '../lib/blog';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const minutes = readingMinutes(post.body);
+const meta = [
+	{ label: 'Category', value: post.data.category },
+	{ label: 'Reading time', value: readingLabel(minutes) },
+];
+---
+
+<article class="post" data-post>
+	<div class="post__inner">
+		<header class="post__intro">
+			<h1 class="post__title" data-post-reveal>{post.data.title}</h1>
+			<div class="post__lead">
+				<p class="post__summary" data-post-reveal>{post.data.description}</p>
+				<ul class="post__meta">
+					{
+						meta.map((item) => (
+							<li class="post__meta-item">
+								<p class="post__meta-label">{item.label}</p>
+								<p class="post__meta-value">{item.value}</p>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</header>
+
+		<figure class="post__hero">
+			<img class="post__image" src={post.data.image} alt={post.data.title} />
+		</figure>
+
+		<div class="post__body">
+			<Content />
+		</div>
+	</div>
+</article>
+
+<style>
+	.post {
+		width: 100%;
+		padding-block: 8rem 4rem;
+		background-color: var(--color-bg);
+	}
+
+	.post__inner {
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.post__intro {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 1.5rem;
+		width: 100%;
+	}
+
+	.post__title {
+		margin: 0;
+		width: 100%;
+		min-width: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 2.5rem;
+		line-height: 0.95;
+		letter-spacing: -0.08rem;
+		text-align: left;
+	}
+
+	.post__title :global(.post-reveal-line),
+	.post__summary :global(.post-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.post__lead {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 1.5rem;
+		width: 100%;
+	}
+
+	.post__summary {
+		margin: 0;
+		max-width: 36rem;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+		text-align: left;
+	}
+
+	.post__meta {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		list-style: none;
+	}
+
+	.post__meta-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		min-width: 0;
+		padding: 1.1rem 1.15rem 1.2rem;
+		border: 0.0625rem solid rgb(245 245 245 / 0.14);
+		border-radius: 1.25rem;
+		background-color: #111;
+	}
+
+	.post__meta-label,
+	.post__meta-value {
+		margin: 0;
+		font-family: var(--font-sans);
+	}
+
+	.post__meta-label {
+		color: var(--color-muted);
+		font-weight: 500;
+		font-size: 0.75rem;
+		line-height: 1.2;
+		letter-spacing: -0.01rem;
+	}
+
+	.post__meta-value {
+		color: var(--color-fg);
+		font-weight: 600;
+		font-size: 1.0625rem;
+		line-height: 1.2;
+		letter-spacing: -0.02rem;
+	}
+
+	.post__hero {
+		margin: 2.5rem 0 0;
+		overflow: hidden;
+		border-radius: 1.5rem;
+	}
+
+	.post__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		aspect-ratio: 16 / 9;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.post__body {
+		max-width: 56rem;
+		margin: 3rem auto 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+	}
+
+	.post__body :global(h2) {
+		margin: 2.5rem 0 1rem;
+		color: var(--color-fg);
+		font-weight: 600;
+		font-size: 1.75rem;
+		line-height: 1.15;
+		letter-spacing: -0.04rem;
+	}
+
+	.post__body :global(h3) {
+		margin: 2rem 0 0.85rem;
+		color: var(--color-fg);
+		font-weight: 600;
+		font-size: 1.25rem;
+		line-height: 1.25;
+		letter-spacing: -0.03rem;
+	}
+
+	.post__body :global(p),
+	.post__body :global(ul),
+	.post__body :global(ol) {
+		margin: 0 0 1.15rem;
+		font-weight: 400;
+		font-size: 1.0625rem;
+		line-height: 1.7;
+		letter-spacing: -0.01rem;
+	}
+
+	.post__body :global(ul),
+	.post__body :global(ol) {
+		padding-left: 1.25rem;
+	}
+
+	.post__body :global(li + li) {
+		margin-top: 0.45rem;
+	}
+
+	.post__body :global(strong) {
+		color: var(--color-fg);
+		font-weight: 600;
+	}
+
+	.post__body :global(a) {
+		color: var(--color-fg);
+		text-underline-offset: 0.15rem;
+	}
+
+	@media (min-width: 48rem) {
+		.post {
+			padding-block: 9rem 5rem;
+		}
+
+		.post__inner {
+			padding-inline: 2rem;
+		}
+
+		.post__title {
+			font-size: 4rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.post__lead {
+			flex-direction: row;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 2.5rem;
+		}
+
+		.post__summary {
+			flex: 1 1 auto;
+			font-size: 1rem;
+		}
+
+		.post__meta {
+			flex: 0 0 22rem;
+			width: 22rem;
+			gap: 1rem;
+		}
+
+		.post__hero {
+			margin-top: 3rem;
+			border-radius: 1.75rem;
+		}
+
+		.post__body {
+			margin-top: 4rem;
+		}
+
+		.post__body :global(h2) {
+			font-size: 2.25rem;
+		}
+
+		.post__body :global(p),
+		.post__body :global(ul),
+		.post__body :global(ol) {
+			font-size: 1.125rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.post {
+			padding-block: 10rem 6rem;
+		}
+
+		.post__inner {
+			padding-inline: 2.5rem;
+		}
+
+		.post__title {
+			font-size: 4.75rem;
+			letter-spacing: -0.16rem;
+		}
+
+		.post__lead {
+			gap: 3rem;
+		}
+
+		.post__meta {
+			flex-basis: 24rem;
+			width: 24rem;
+		}
+
+		.post__meta-value {
+			font-size: 1.125rem;
+		}
+
+		.post__hero {
+			margin-top: 3.5rem;
+		}
+
+		.post__body {
+			margin-top: 5rem;
+		}
+
+		.post__body :global(h2) {
+			font-size: 2.5rem;
+			letter-spacing: -0.06rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyPostMotion: (() => void) | undefined;
+
+	function initPostMotion() {
+		destroyPostMotion?.();
+
+		const article = document.querySelector('[data-post]');
+		if (!(article instanceof HTMLElement)) return;
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const header = article.querySelector('.post__intro');
+			const revealTargets = article.querySelectorAll('[data-post-reveal]');
+
+			if (!(header instanceof HTMLElement) || revealTargets.length === 0) return;
+
+			const split = SplitText.create(revealTargets, {
+				type: 'lines',
+				mask: 'lines',
+				autoSplit: true,
+				aria: 'auto',
+				linesClass: 'post-reveal-line',
+				onSplit(self) {
+					return gsap.from(self.lines, {
+						yPercent: 110,
+						duration: 0.95,
+						ease: 'power3.out',
+						stagger: 0.12,
+						scrollTrigger: {
+							trigger: header,
+							start: 'top 80%',
+							once: true,
+						},
+					});
+				},
+			});
+
+			return () => split.revert();
+		});
+
+		destroyPostMotion = () => {
+			mm.revert();
+			destroyPostMotion = undefined;
+		};
+	}
+
+	initPostMotion();
+	document.addEventListener('astro:after-swap', initPostMotion);
+</script>

@@ -1,0 +1,322 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { BLOG_LINK, BLOG_TITLE } from '../consts';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<section class="blog" id="blog" aria-label="Blog" data-blog>
+	<div class="blog__inner">
+		<header class="blog__header">
+			<h1 class="blog__title">
+				<span class="blog__title-lead" data-blog-reveal>{BLOG_TITLE.lead}</span>
+				<span class="blog__title-main" data-blog-reveal>{BLOG_TITLE.main}</span>
+			</h1>
+			<a class="blog__button" href={BLOG_LINK.href} data-blog-link-hover aria-label={BLOG_LINK.label}>
+				<span class="blog__button-mask" aria-hidden="true">
+					{
+						charsOf(BLOG_LINK.label).map((char) => (
+							<span class="blog__char-col">
+								<span class="blog__char-track">
+									<span class="blog__char">{char}</span>
+									<span class="blog__char">{char}</span>
+								</span>
+							</span>
+						))
+					}
+				</span>
+			</a>
+		</header>
+
+		<ul class="blog__grid">
+			{
+				posts.map((post) => (
+					<li class="blog__item">
+						<BlogCard post={post} />
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	.blog {
+		width: 100%;
+		padding-block: 11rem 5rem;
+		background-color: var(--color-bg);
+	}
+
+	.blog__inner {
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.blog__header {
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-between;
+		gap: 1.5rem;
+	}
+
+	.blog__title {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		min-width: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 4.125rem;
+		line-height: 0.95;
+		letter-spacing: -0.06rem;
+	}
+
+	.blog__title-main {
+		color: #737373;
+	}
+
+	.blog__title :global(.blog-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.blog__button {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 0.08em;
+		padding: 0.9rem 1.6rem;
+		border-radius: 999rem;
+		background-color: #fff;
+		color: #0a0a0a;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		text-decoration: none;
+		isolation: isolate;
+		transition: background-color 0.45s ease;
+	}
+
+	.blog__button-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.blog__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.blog__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.blog__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.blog__button:hover,
+	.blog__button:focus-visible {
+		background-color: #f5f5f5;
+		outline: none;
+	}
+
+	.blog__grid {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 1.25rem;
+		margin: 3rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.blog__item {
+		min-width: 0;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.blog__button {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.blog {
+			padding-block: 12rem 6rem;
+		}
+
+		.blog__inner {
+			padding-inline: 2rem;
+		}
+
+		.blog__title {
+			font-size: 6.5rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.blog__button {
+			padding: 1rem 1.85rem;
+			font-size: 1rem;
+		}
+
+		.blog__grid {
+			grid-template-columns: 1fr 1fr;
+			gap: 1.5rem;
+			margin-top: 4rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.blog {
+			padding-block: 13rem 7rem;
+		}
+
+		.blog__inner {
+			padding-inline: 2.5rem;
+		}
+
+		.blog__title {
+			font-size: 8.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.blog__button {
+			padding: 1.05rem 2.1rem;
+			font-size: 1.0625rem;
+		}
+
+		.blog__grid {
+			grid-template-columns: repeat(3, minmax(0, 1fr));
+			gap: 1.75rem;
+			margin-top: 5rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyBlogMotion: (() => void) | undefined;
+
+	function initBlogMotion() {
+		destroyBlogMotion?.();
+
+		const section = document.querySelector('[data-blog]');
+		if (!(section instanceof HTMLElement)) return;
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const cleanups: Array<() => void> = [];
+			const header = section.querySelector('.blog__header');
+			const revealTargets = section.querySelectorAll('[data-blog-reveal]');
+
+			if (header instanceof HTMLElement && revealTargets.length > 0) {
+				const split = SplitText.create(revealTargets, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'blog-reveal-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: header,
+								start: 'top 80%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				cleanups.push(() => split.revert());
+			}
+
+			section.querySelectorAll('[data-blog-link-hover]').forEach((link) => {
+				const tracks = link.querySelectorAll('.blog__char-track');
+				if (tracks.length === 0) return;
+
+				gsap.set(tracks, { yPercent: 0 });
+
+				let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+				const playHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: -50,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				const resetHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: 0,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				link.addEventListener('mouseenter', playHover);
+				link.addEventListener('mouseleave', resetHover);
+				link.addEventListener('focus', playHover);
+				link.addEventListener('blur', resetHover);
+
+				cleanups.push(() => {
+					hoverTl?.kill();
+					link.removeEventListener('mouseenter', playHover);
+					link.removeEventListener('mouseleave', resetHover);
+					link.removeEventListener('focus', playHover);
+					link.removeEventListener('blur', resetHover);
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyBlogMotion = () => {
+			mm.revert();
+			destroyBlogMotion = undefined;
+		};
+	}
+
+	initBlogMotion();
+	document.addEventListener('astro:after-swap', initBlogMotion);
+</script>

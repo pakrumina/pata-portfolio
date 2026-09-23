@@ -1,0 +1,79 @@
+---
+
+<div class="hero-trail" data-hero-trail aria-hidden="true">
+	<div class="hero-trail__layer" data-trail-layer></div>
+</div>
+
+<script>
+	import gsap from 'gsap';
+	import { HERO_TRAIL_IMAGES } from '../consts';
+	import { initImageTrail } from '../scripts/image-trail';
+
+	let destroyTrail: (() => void) | undefined;
+
+	function initHeroTrail() {
+		destroyTrail?.();
+
+		const hero = document.querySelector('[data-hero]');
+		const layer = document.querySelector('[data-trail-layer]');
+		if (!(hero instanceof HTMLElement) || !(layer instanceof HTMLElement)) return;
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const stop = initImageTrail({
+				container: hero,
+				layer,
+				images: HERO_TRAIL_IMAGES,
+			});
+			return () => stop();
+		});
+
+		destroyTrail = () => {
+			mm.revert();
+			destroyTrail = undefined;
+		};
+	}
+
+	initHeroTrail();
+	document.addEventListener('astro:after-swap', initHeroTrail);
+</script>
+
+<style>
+	.hero-trail {
+		position: absolute;
+		inset: 0;
+		z-index: 4;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.hero-trail__layer {
+		position: absolute;
+		inset: 0;
+		overflow: hidden;
+	}
+
+	.hero-trail :global(.trail-img) {
+		position: absolute;
+		z-index: 12;
+		overflow: hidden;
+		border-radius: 1.25rem;
+		pointer-events: none;
+		transform-origin: center;
+		backface-visibility: hidden;
+		will-change: transform;
+	}
+
+	.hero-trail :global(.trail-img img) {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero-trail {
+			display: none;
+		}
+	}
+</style>

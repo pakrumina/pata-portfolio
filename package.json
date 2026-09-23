@@ -1,5 +1,5 @@
 {
-  "name": "pata-portfolio",
+  "name": "craift",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -12,14 +12,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.3.1",
-    "tailwindcss": "^4.3.3"
-  },
-  "allowScripts": {
-    "esbuild": true
-  },
-  "devDependencies": {
-    "decap-server": "^3.10.0"
+    "astro": "^7.2.1",
+    "gsap": "^3.15.0"
   }
 }

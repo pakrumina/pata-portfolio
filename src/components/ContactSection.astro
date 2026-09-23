@@ -1,0 +1,866 @@
+---
+import {
+	CONTACT_DESCRIPTION,
+	CONTACT_EMAIL,
+	CONTACT_FIELDS,
+	CONTACT_FORM_ACTION,
+	CONTACT_FORM_DEMO_NOTE,
+	CONTACT_FORM_ERROR,
+	CONTACT_FORM_HIDDEN,
+	CONTACT_FORM_SUBMIT,
+	CONTACT_FORM_SUCCESS,
+	CONTACT_KICKER,
+	CONTACT_PHONE,
+	CONTACT_PHONE_HREF,
+	CONTACT_TITLE,
+	SOCIAL_LINKS_LEFT,
+	SOCIAL_LINKS_RIGHT,
+} from '../consts';
+import SocialGlyph from './SocialGlyph.astro';
+
+const socialLinks = [...SOCIAL_LINKS_LEFT, ...SOCIAL_LINKS_RIGHT];
+const formAction = CONTACT_FORM_ACTION.trim();
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<section class="contact" id="contact" aria-label="Contact">
+	<div class="contact__inner">
+		<div class="contact__copy">
+			<p class="contact__kicker">
+				<span class="contact__kicker-mark" aria-hidden="true">✦</span>
+				{CONTACT_KICKER}
+			</p>
+			<h1 class="contact__title">
+				<span class="contact__title-lead" data-contact-reveal>{CONTACT_TITLE.lead}</span>
+				<span class="contact__title-main" data-contact-reveal>{CONTACT_TITLE.main}</span>
+			</h1>
+			<p class="contact__text">{CONTACT_DESCRIPTION}</p>
+			<div class="contact__methods">
+				<a
+					class="contact__info"
+					href={`mailto:${CONTACT_EMAIL}`}
+					data-contact-info-hover
+					aria-label={`Email ${CONTACT_EMAIL}`}
+				>
+					<span class="contact__info-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none">
+							<rect
+								x="3.75"
+								y="5.75"
+								width="16.5"
+								height="12.5"
+								rx="2"
+								stroke="currentColor"
+								stroke-width="1.4"
+							></rect>
+							<path
+								d="M4.5 7.25 12 12.25 19.5 7.25"
+								stroke="currentColor"
+								stroke-width="1.4"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							></path>
+						</svg>
+					</span>
+					<span class="contact__info-body">
+						<span class="contact__info-mask" aria-hidden="true">
+							{
+								charsOf(CONTACT_EMAIL).map((char) => (
+									<span class="contact__info-col">
+										<span class="contact__info-track">
+											<span class="contact__info-char">{char}</span>
+											<span class="contact__info-char">{char}</span>
+										</span>
+									</span>
+								))
+							}
+						</span>
+						<span class="contact__info-arrow" aria-hidden="true">↗</span>
+						<span class="contact__info-underline" aria-hidden="true">
+							<span class="contact__info-underline-fill"></span>
+						</span>
+					</span>
+				</a>
+				<a
+					class="contact__info"
+					href={CONTACT_PHONE_HREF}
+					data-contact-info-hover
+					aria-label={`Phone ${CONTACT_PHONE}`}
+				>
+					<span class="contact__info-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none">
+							<path
+								d="M8.2 4.75h2.15l1.05 3.2-1.35 1.15a11.5 11.5 0 0 0 5.15 5.15l1.15-1.35 3.2 1.05v2.15c0 .9-.7 1.7-1.6 1.85-1.85.3-5.55-.15-8.85-3.45-3.3-3.3-3.75-7-3.45-8.85.15-.9.95-1.6 1.85-1.6Z"
+								stroke="currentColor"
+								stroke-width="1.4"
+								stroke-linejoin="round"
+							></path>
+						</svg>
+					</span>
+					<span class="contact__info-body">
+						<span class="contact__info-mask" aria-hidden="true">
+							{
+								charsOf(CONTACT_PHONE).map((char) => (
+									<span class="contact__info-col">
+										<span class="contact__info-track">
+											<span class="contact__info-char">{char}</span>
+											<span class="contact__info-char">{char}</span>
+										</span>
+									</span>
+								))
+							}
+						</span>
+						<span class="contact__info-arrow" aria-hidden="true">↗</span>
+						<span class="contact__info-underline" aria-hidden="true">
+							<span class="contact__info-underline-fill"></span>
+						</span>
+					</span>
+				</a>
+			</div>
+			<nav class="contact__socials" aria-label="Social">
+				{
+					socialLinks.map((link) => (
+						<a class="contact__social" href={link.href} aria-label={link.label} target="_blank" rel="noreferrer">
+							<span class="contact__social-viewport">
+								<span class="contact__social-track">
+									<span class="contact__social-face">
+										<SocialGlyph id={link.id} />
+									</span>
+									<span class="contact__social-face">
+										<SocialGlyph id={link.id} />
+									</span>
+								</span>
+							</span>
+						</a>
+					))
+				}
+			</nav>
+		</div>
+
+		<form
+			class="contact__form"
+			method="POST"
+			action={formAction || undefined}
+			data-contact-form
+			data-success={CONTACT_FORM_SUCCESS}
+			data-error={CONTACT_FORM_ERROR}
+			data-demo-note={formAction ? '' : CONTACT_FORM_DEMO_NOTE}
+		>
+			{
+				CONTACT_FORM_HIDDEN.map((field) => (
+					<input type="hidden" name={field.name} value={field.value} />
+				))
+			}
+			<label class="contact__honeypot">
+				<span>Company</span>
+				<input type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+			</label>
+
+			{
+				CONTACT_FIELDS.map((field) => (
+					<label class="contact__field" for={field.id}>
+						<span class="contact__label">{field.label}</span>
+						<input
+							class="contact__input"
+							id={field.id}
+							name={field.name}
+							type={field.type}
+							autocomplete={field.autocomplete}
+							required={field.required}
+						/>
+					</label>
+				))
+			}
+
+			<label class="contact__field" for="message">
+				<span class="contact__label">Message</span>
+				<textarea
+					class="contact__input contact__input--area"
+					id="message"
+					name="message"
+					rows="5"
+					required
+				></textarea>
+			</label>
+
+			<button
+				class="contact__submit"
+				type="submit"
+				data-contact-submit
+				data-contact-link-hover
+				aria-label={CONTACT_FORM_SUBMIT}
+			>
+				<span class="contact__submit-mask" aria-hidden="true">
+					{
+						charsOf(CONTACT_FORM_SUBMIT).map((char) => (
+							<span class="contact__char-col">
+								<span class="contact__char-track">
+									<span class="contact__char">{char}</span>
+									<span class="contact__char">{char}</span>
+								</span>
+							</span>
+						))
+					}
+				</span>
+			</button>
+
+			<p class="contact__status" data-contact-status role="status" aria-live="polite" hidden></p>
+		</form>
+	</div>
+</section>
+
+<style>
+	.contact {
+		width: 100%;
+		padding-block: 8rem 5rem;
+		background-color: var(--color-bg);
+	}
+
+	.contact__inner {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.contact__copy {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		min-width: 0;
+	}
+
+	.contact__kicker {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45rem;
+		margin: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 0.75rem;
+		line-height: 1;
+		letter-spacing: 0.08rem;
+		text-transform: uppercase;
+	}
+
+	.contact__kicker-mark {
+		font-size: 0.7rem;
+		line-height: 1;
+	}
+
+	.contact__title {
+		display: flex;
+		flex-direction: column;
+		margin: 1.25rem 0 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 4.125rem;
+		line-height: 0.95;
+		letter-spacing: -0.06rem;
+	}
+
+	.contact__title-main {
+		color: #737373;
+	}
+
+	.contact__title :global(.contact-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.contact__text {
+		margin: 1.5rem 0 0;
+		max-width: 22rem;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+	}
+
+	.contact__methods {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.85rem;
+		margin-top: 1.5rem;
+	}
+
+	.contact__info {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		width: fit-content;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 1rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		text-decoration: none;
+	}
+
+	.contact__info-icon {
+		display: flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+		width: 1.15rem;
+		height: 1.15rem;
+		color: var(--color-fg);
+	}
+
+	.contact__info-icon svg {
+		display: block;
+		width: 100%;
+		height: 100%;
+	}
+
+	.contact__info-body {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-bottom: 0.0625rem solid rgb(245 245 245 / 0.35);
+	}
+
+	.contact__info-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.contact__info-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.contact__info-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.contact__info-char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.contact__info-underline {
+		position: absolute;
+		right: 0;
+		bottom: -0.0625rem;
+		left: 0;
+		height: 0.0625rem;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.contact__info-underline-fill {
+		display: block;
+		width: 100%;
+		height: 100%;
+		background-color: #fff;
+		transform: translateX(-100%);
+		transition: transform 0.45s ease;
+	}
+
+	.contact__info:hover .contact__info-underline-fill,
+	.contact__info:focus-visible .contact__info-underline-fill {
+		transform: translateX(0);
+	}
+
+	.contact__info-arrow {
+		font-size: 0.9rem;
+		line-height: 1;
+	}
+
+	.contact__socials {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 0.65rem;
+		margin-top: 2rem;
+	}
+
+	.contact__social {
+		--icon-size: 2.5rem;
+		--glyph-size: 1.175rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: var(--icon-size);
+		height: var(--icon-size);
+		border: 0.08rem solid rgb(255 255 255 / 0.16);
+		border-radius: 50%;
+		background-color: rgb(255 255 255 / 8%);
+		color: #fff;
+		transition: background-color 0.2s ease;
+	}
+
+	.contact__social:hover,
+	.contact__social:focus-visible {
+		background-color: rgb(255 255 255 / 16%);
+		outline: none;
+	}
+
+	.contact__social-viewport {
+		display: block;
+		overflow: hidden;
+		width: var(--glyph-size);
+		height: var(--glyph-size);
+		min-height: 0;
+	}
+
+	.contact__social-track {
+		display: flex;
+		flex-direction: column;
+		transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.contact__social:hover .contact__social-track,
+	.contact__social:focus-visible .contact__social-track {
+		transform: translateY(calc(-1 * var(--glyph-size)));
+	}
+
+	.contact__social-face {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex: 0 0 var(--glyph-size);
+		width: var(--glyph-size);
+		height: var(--glyph-size);
+		overflow: hidden;
+		color: #fff;
+	}
+
+	.contact__social :global(svg) {
+		width: var(--glyph-size);
+		height: var(--glyph-size);
+	}
+
+	.contact__form {
+		display: flex;
+		flex-direction: column;
+		gap: 1.15rem;
+		width: 100%;
+		padding: 1.5rem 1.35rem 1.5rem;
+		border: 0.0625rem solid rgb(245 245 245 / 0.12);
+		border-radius: 1.875rem;
+		background-color: #111;
+	}
+
+	.contact__honeypot {
+		position: absolute;
+		width: 0.0625rem;
+		height: 0.0625rem;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+	}
+
+	.contact__field {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+		min-width: 0;
+	}
+
+	.contact__label {
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 500;
+		font-size: 0.875rem;
+		line-height: 1.2;
+		letter-spacing: -0.01rem;
+	}
+
+	.contact__input {
+		width: 100%;
+		margin: 0;
+		padding: 0.95rem 1.15rem;
+		border: 0;
+		border-radius: 999rem;
+		background-color: #1a1a1a;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		outline: none;
+		box-shadow: none;
+		appearance: none;
+	}
+
+	.contact__input--area {
+		min-height: 7.5rem;
+		padding: 1rem 1.15rem;
+		border-radius: 1.5rem;
+		resize: vertical;
+	}
+
+	.contact__input:focus-visible {
+		box-shadow: inset 0 0 0 0.0625rem rgb(245 245 245 / 0.28);
+	}
+
+	.contact__input::placeholder {
+		color: rgb(245 245 245 / 0.28);
+	}
+
+	.contact__submit {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 100%;
+		margin-top: 0.35rem;
+		padding: 0.95rem 1.6rem;
+		border: 0;
+		border-radius: 999rem;
+		background-color: #fff;
+		color: #0a0a0a;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		cursor: pointer;
+		isolation: isolate;
+		transition: background-color 0.45s ease, opacity 0.2s ease;
+	}
+
+	.contact__submit-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.contact__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.contact__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.contact__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.contact__submit:hover,
+	.contact__submit:focus-visible {
+		background-color: #f5f5f5;
+		outline: none;
+	}
+
+	.contact__submit:disabled {
+		cursor: wait;
+		opacity: 0.7;
+	}
+
+	.contact__status {
+		margin: 0.15rem 0 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.875rem;
+		line-height: 1.45;
+		letter-spacing: -0.01rem;
+	}
+
+	.contact__status.is-error {
+		color: #e8b4b4;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.contact__social {
+			transition: none;
+		}
+
+		.contact__social-track {
+			transition: none;
+		}
+
+		.contact__social:hover .contact__social-track,
+		.contact__social:focus-visible .contact__social-track {
+			transform: none;
+		}
+
+		.contact__submit {
+			transition: none;
+		}
+
+		.contact__info-underline-fill {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.contact {
+			padding-block: 9rem 6rem;
+		}
+
+		.contact__inner {
+			padding-inline: 2rem;
+			gap: 3.5rem;
+		}
+
+		.contact__title {
+			font-size: 6.5rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.contact__text {
+			max-width: 24rem;
+			font-size: 1rem;
+		}
+
+		.contact__info {
+			font-size: 1.125rem;
+		}
+
+		.contact__social {
+			--icon-size: 2.75rem;
+		}
+
+		.contact__form {
+			padding: 1.75rem;
+			gap: 1.25rem;
+		}
+
+		.contact__submit {
+			padding: 1rem 1.85rem;
+			font-size: 1rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.contact {
+			padding-block: 10rem 7rem;
+		}
+
+		.contact__inner {
+			display: grid;
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+			align-items: center;
+			gap: 4rem;
+			padding-inline: 2.5rem;
+			min-height: calc(100svh - 12rem);
+		}
+
+		.contact__title {
+			font-size: 8.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.contact__text {
+			max-width: 26rem;
+			font-size: 1.125rem;
+		}
+
+		.contact__form {
+			padding: 2rem 1.85rem 1.85rem;
+		}
+
+		.contact__submit {
+			padding: 1.05rem 2.1rem;
+			font-size: 1.0625rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyContact: (() => void) | undefined;
+
+	function setStatus(status: HTMLElement, message: string, isError: boolean) {
+		status.hidden = !message;
+		status.textContent = message;
+		status.classList.toggle('is-error', isError);
+	}
+
+	function initContact() {
+		destroyContact?.();
+
+		const form = document.querySelector('[data-contact-form]');
+		const cleanups: Array<() => void> = [];
+
+		if (form instanceof HTMLFormElement) {
+			const status = form.querySelector('[data-contact-status]');
+			const submit = form.querySelector('[data-contact-submit]');
+			const success = form.dataset.success ?? '';
+			const error = form.dataset.error ?? '';
+			const demoNote = form.dataset.demoNote ?? '';
+			const action = form.getAttribute('action')?.trim() ?? '';
+
+			const onSubmit = async (event: SubmitEvent) => {
+				event.preventDefault();
+
+				if (!(status instanceof HTMLElement) || !(submit instanceof HTMLButtonElement)) {
+					return;
+				}
+
+				if (!form.checkValidity()) {
+					form.reportValidity();
+					setStatus(status, error, true);
+					return;
+				}
+
+				const honeypot = form.querySelector<HTMLInputElement>('input[name="_gotcha"]');
+				if (honeypot?.value) {
+					setStatus(status, success, false);
+					form.reset();
+					return;
+				}
+
+				submit.disabled = true;
+				setStatus(status, '', false);
+
+				try {
+					if (action) {
+						const response = await fetch(action, {
+							method: 'POST',
+							body: new FormData(form),
+							headers: { Accept: 'application/json' },
+						});
+
+						if (!response.ok) {
+							throw new Error('Form endpoint rejected the request');
+						}
+					}
+
+					form.reset();
+					setStatus(status, demoNote ? `${success} ${demoNote}` : success, false);
+				} catch {
+					setStatus(status, error, true);
+				} finally {
+					submit.disabled = false;
+				}
+			};
+
+			form.addEventListener('submit', onSubmit);
+			cleanups.push(() => form.removeEventListener('submit', onSubmit));
+		}
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const motionCleanups: Array<() => void> = [];
+			const header = document.querySelector('.contact__copy');
+			const revealTargets = document.querySelectorAll('[data-contact-reveal]');
+
+			if (header instanceof HTMLElement && revealTargets.length > 0) {
+				const split = SplitText.create(revealTargets, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'contact-reveal-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: header,
+								start: 'top 80%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				motionCleanups.push(() => split.revert());
+			}
+
+			function bindCharHover(selector: string, trackSelector: string) {
+				document.querySelectorAll(selector).forEach((link) => {
+					const tracks = link.querySelectorAll(trackSelector);
+					if (tracks.length === 0) return;
+
+					gsap.set(tracks, { yPercent: 0 });
+
+					let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+					const playHover = () => {
+						hoverTl?.kill();
+						hoverTl = gsap.to(tracks, {
+							yPercent: -50,
+							duration: 0.35,
+							ease: 'power3.out',
+							stagger: 0.03,
+							overwrite: true,
+						});
+					};
+
+					const resetHover = () => {
+						hoverTl?.kill();
+						hoverTl = gsap.to(tracks, {
+							yPercent: 0,
+							duration: 0.35,
+							ease: 'power3.out',
+							stagger: 0.03,
+							overwrite: true,
+						});
+					};
+
+					link.addEventListener('mouseenter', playHover);
+					link.addEventListener('mouseleave', resetHover);
+					link.addEventListener('focus', playHover);
+					link.addEventListener('blur', resetHover);
+
+					motionCleanups.push(() => {
+						hoverTl?.kill();
+						link.removeEventListener('mouseenter', playHover);
+						link.removeEventListener('mouseleave', resetHover);
+						link.removeEventListener('focus', playHover);
+						link.removeEventListener('blur', resetHover);
+					});
+				});
+			}
+
+			bindCharHover('[data-contact-link-hover]', '.contact__char-track');
+			bindCharHover('[data-contact-info-hover]', '.contact__info-track');
+
+			return () => {
+				motionCleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyContact = () => {
+			cleanups.forEach((cleanup) => cleanup());
+			mm.revert();
+			destroyContact = undefined;
+		};
+	}
+
+	initContact();
+	document.addEventListener('astro:after-swap', initContact);
+</script>

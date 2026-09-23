@@ -1,0 +1,290 @@
+---
+import { PROJECTS_LINK, PROJECTS_TITLE } from '../consts';
+import WorksGrid from './WorksGrid.astro';
+
+function charsOf(label: string) {
+	return [...label].map((char) => (char === ' ' ? '\u00A0' : char));
+}
+---
+
+<section class="projects" id="projects" aria-label="Projects">
+	<div class="projects__inner">
+		<header class="projects__header">
+			<h1 class="projects__title">
+				<span class="projects__title-lead" data-projects-reveal>{PROJECTS_TITLE.lead}</span>
+				<span class="projects__title-main" data-projects-reveal>{PROJECTS_TITLE.main}</span>
+			</h1>
+			<a
+				class="projects__button"
+				href={PROJECTS_LINK.href}
+				data-projects-link-hover
+				aria-label={PROJECTS_LINK.label}
+			>
+				<span class="projects__button-mask" aria-hidden="true">
+					{
+						charsOf(PROJECTS_LINK.label).map((char) => (
+							<span class="projects__char-col">
+								<span class="projects__char-track">
+									<span class="projects__char">{char}</span>
+									<span class="projects__char">{char}</span>
+								</span>
+							</span>
+						))
+					}
+				</span>
+			</a>
+		</header>
+
+		<WorksGrid />
+	</div>
+</section>
+
+<style>
+	.projects {
+		width: 100%;
+		padding-block: 11rem 5rem;
+		background-color: var(--color-bg);
+	}
+
+	.projects__inner {
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.projects__header {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.5rem;
+	}
+
+	.projects__title {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		min-width: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 4.125rem;
+		line-height: 0.95;
+		letter-spacing: -0.06rem;
+	}
+
+	.projects__title-main {
+		color: #737373;
+	}
+
+	.projects__title :global(.projects-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.projects__button {
+		display: inline-flex;
+		flex: 0 0 auto;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 0.08em;
+		padding: 0.9rem 1.6rem;
+		border-radius: 999rem;
+		background-color: #fff;
+		color: #0a0a0a;
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 0.9375rem;
+		line-height: 1.4;
+		letter-spacing: -0.01rem;
+		text-decoration: none;
+		isolation: isolate;
+		transition: background-color 0.45s ease;
+	}
+
+	.projects__button-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.projects__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.projects__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.projects__char {
+		display: block;
+		flex: 0 0 1.4em;
+		height: 1.4em;
+		line-height: 1.4;
+	}
+
+	.projects__button:hover,
+	.projects__button:focus-visible {
+		background-color: #f5f5f5;
+		outline: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.projects__button {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 48rem) {
+		.projects {
+			padding-block: 12rem 6rem;
+		}
+
+		.projects__inner {
+			padding-inline: 2rem;
+		}
+
+		.projects__header {
+			flex-direction: row;
+			align-items: flex-end;
+			justify-content: space-between;
+		}
+
+		.projects__title {
+			font-size: 6.5rem;
+			letter-spacing: -0.12rem;
+		}
+
+		.projects__button {
+			padding: 1rem 1.85rem;
+			font-size: 1rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.projects {
+			padding-block: 13rem 7rem;
+		}
+
+		.projects__inner {
+			padding-inline: 2.5rem;
+		}
+
+		.projects__title {
+			font-size: 8.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.projects__button {
+			padding: 1.05rem 2.1rem;
+			font-size: 1.0625rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyProjectsMotion: (() => void) | undefined;
+
+	function initProjectsMotion() {
+		destroyProjectsMotion?.();
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const cleanups: Array<() => void> = [];
+			const header = document.querySelector('.projects__header');
+			const revealTargets = document.querySelectorAll('[data-projects-reveal]');
+
+			if (header instanceof HTMLElement && revealTargets.length > 0) {
+				const split = SplitText.create(revealTargets, {
+					type: 'lines',
+					mask: 'lines',
+					autoSplit: true,
+					aria: 'auto',
+					linesClass: 'projects-reveal-line',
+					onSplit(self) {
+						return gsap.from(self.lines, {
+							yPercent: 110,
+							duration: 0.95,
+							ease: 'power3.out',
+							stagger: 0.12,
+							scrollTrigger: {
+								trigger: header,
+								start: 'top 80%',
+								once: true,
+							},
+						});
+					},
+				});
+
+				cleanups.push(() => split.revert());
+			}
+
+			document.querySelectorAll('[data-projects-link-hover]').forEach((link) => {
+				const tracks = link.querySelectorAll('.projects__char-track');
+				if (tracks.length === 0) return;
+
+				gsap.set(tracks, { yPercent: 0 });
+
+				let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+				const playHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: -50,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				const resetHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: 0,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				link.addEventListener('mouseenter', playHover);
+				link.addEventListener('mouseleave', resetHover);
+				link.addEventListener('focus', playHover);
+				link.addEventListener('blur', resetHover);
+
+				cleanups.push(() => {
+					hoverTl?.kill();
+					link.removeEventListener('mouseenter', playHover);
+					link.removeEventListener('mouseleave', resetHover);
+					link.removeEventListener('focus', playHover);
+					link.removeEventListener('blur', resetHover);
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+
+		destroyProjectsMotion = () => {
+			mm.revert();
+			destroyProjectsMotion = undefined;
+		};
+	}
+
+	initProjectsMotion();
+	document.addEventListener('astro:after-swap', initProjectsMotion);
+</script>

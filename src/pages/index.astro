@@ -1,17 +1,51 @@
 ---
-
+import { HERO_DESCRIPTION, HERO_KICKER, HERO_TITLE } from '../consts';
+import AboutSection from '../components/AboutSection.astro';
+import CtaSection from '../components/CtaSection.astro';
+import HeroSection from '../components/HeroSection.astro';
+import PartnerMarquee from '../components/PartnerMarquee.astro';
+import PricingSection from '../components/PricingSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import TestimonialsSection from '../components/TestimonialsSection.astro';
+import WorksSection from '../components/WorksSection.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout pageTitle="Craift - Design Agency Theme">
+	<HeroSection
+		kicker={HERO_KICKER}
+		titleLead={HERO_TITLE.lead}
+		titleMain={HERO_TITLE.main}
+		description={HERO_DESCRIPTION}
+	/>
+	<section class="partners" aria-label="Partners">
+		<PartnerMarquee />
+	</section>
+	<AboutSection />
+	<WorksSection />
+	<ServicesSection />
+	<TestimonialsSection />
+	<PricingSection />
+	<CtaSection />
+</BaseLayout>
+
+<style>
+	.partners {
+		position: relative;
+		width: 100%;
+		padding-block: 8rem 0;
+		background-color: var(--color-bg);
+	}
+
+	@media (max-width: 47.999rem) {
+		.partners {
+			padding-block: 5rem 0;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.partners {
+			padding-block: 12rem 6rem;
+		}
+	}
+</style>

@@ -1,0 +1,462 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+
+const meta = [
+	{ label: 'Service', value: data.service },
+	{ label: 'Industry', value: data.industry },
+	{ label: 'Year', value: data.year },
+	{ label: 'Workflow', value: data.workflow },
+];
+---
+
+<article class="case" data-case>
+	<div class="case__inner">
+		<header class="case__intro">
+			<h1 class="case__title" data-case-reveal>{data.title}</h1>
+			<p class="case__summary" data-case-reveal>{data.description}</p>
+		</header>
+
+		<ul class="case__meta">
+			{
+				meta.map((item) => (
+					<li class="case__meta-item">
+						<p class="case__meta-label">{item.label}</p>
+						<p class="case__meta-value">{item.value}</p>
+					</li>
+				))
+			}
+		</ul>
+
+		<figure class="case__hero">
+			<img class="case__image" src={data.hero} alt={data.title} />
+		</figure>
+
+		<section class="case__split" aria-labelledby="case-goal-title">
+			<div class="case__copy">
+				<h2 class="case__heading" id="case-goal-title">{data.goal.title}</h2>
+				<p class="case__text">{data.goal.lead}</p>
+				<ul class="case__list">
+					{data.goal.points.map((point) => <li>{point}</li>)}
+				</ul>
+				<p class="case__text">{data.goal.close}</p>
+			</div>
+			<div class="case__gallery">
+				{
+					data.goal.images.map((src) => (
+						<figure class="case__shot">
+							<img class="case__image" src={src} alt="" />
+						</figure>
+					))
+				}
+			</div>
+		</section>
+
+		<section class="case__split case__split--reverse" aria-labelledby="case-results-title">
+			<div class="case__copy">
+				<h2 class="case__heading" id="case-results-title">{data.results.title}</h2>
+				<p class="case__text">{data.results.lead}</p>
+				<ol class="case__list case__list--numbered">
+					{data.results.points.map((point) => <li>{point}</li>)}
+				</ol>
+				<p class="case__text">{data.results.close}</p>
+			</div>
+			<div class="case__gallery">
+				{
+					data.results.images.map((src) => (
+						<figure class="case__shot">
+							<img class="case__image" src={src} alt="" />
+						</figure>
+					))
+				}
+			</div>
+		</section>
+	</div>
+</article>
+
+<style>
+	.case {
+		width: 100%;
+		padding-block: 8rem 0;
+		background-color: var(--color-bg);
+	}
+
+	.case__inner {
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.case__intro {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 1.25rem;
+	}
+
+	.case__title {
+		margin: 0;
+		min-width: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 4.125rem;
+		line-height: 0.95;
+		letter-spacing: -0.08rem;
+		text-align: left;
+	}
+
+	.case__title :global(.case-reveal-line),
+	.case__summary :global(.case-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.case__summary {
+		margin: 0;
+		max-width: 32rem;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+		text-align: left;
+	}
+
+	.case__meta {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem;
+		margin: 2.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.case__meta-item {
+		display: flex;
+		flex-direction: column;
+		gap: 0.45rem;
+		min-width: 0;
+		padding: 1.1rem 1.15rem 1.2rem;
+		border: 0.0625rem solid rgb(245 245 245 / 0.14);
+		border-radius: 1.25rem;
+		background-color: #111;
+	}
+
+	.case__meta-label,
+	.case__meta-value {
+		margin: 0;
+		font-family: var(--font-sans);
+	}
+
+	.case__meta-label {
+		color: var(--color-muted);
+		font-weight: 500;
+		font-size: 0.75rem;
+		line-height: 1.2;
+		letter-spacing: -0.01rem;
+	}
+
+	.case__meta-value {
+		color: var(--color-fg);
+		font-weight: 600;
+		font-size: 1.0625rem;
+		line-height: 1.2;
+		letter-spacing: -0.02rem;
+	}
+
+	.case__hero,
+	.case__shot {
+		margin: 0;
+		overflow: hidden;
+		border-radius: 1.5rem;
+	}
+
+	.case__hero {
+		margin-top: 2.5rem;
+	}
+
+	.case__image {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+	}
+
+	.case__hero .case__image {
+		aspect-ratio: 16 / 9;
+	}
+
+	.case__split {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 2rem;
+		margin-top: 4.5rem;
+		align-items: start;
+	}
+
+	.case__copy {
+		display: flex;
+		flex-direction: column;
+		gap: 1.15rem;
+		min-width: 0;
+	}
+
+	.case__heading {
+		margin: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 2rem;
+		line-height: 1.05;
+		letter-spacing: -0.05rem;
+	}
+
+	.case__text,
+	.case__list {
+		margin: 0;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+	}
+
+	.case__list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.55rem;
+		padding: 0;
+		list-style: none;
+	}
+
+	.case__list li {
+		position: relative;
+		padding-inline-start: 1.1rem;
+	}
+
+	.case__list li::before {
+		content: '•';
+		position: absolute;
+		left: 0;
+		color: var(--color-fg);
+	}
+
+	.case__list--numbered {
+		counter-reset: case-point;
+	}
+
+	.case__list--numbered li {
+		counter-increment: case-point;
+		padding-inline-start: 1.5rem;
+	}
+
+	.case__list--numbered li::before {
+		content: counter(case-point) '.';
+		color: var(--color-fg);
+	}
+
+	.case__gallery {
+		display: flex;
+		flex-direction: column;
+		gap: 1.5rem;
+		min-width: 0;
+	}
+
+	.case__shot .case__image {
+		aspect-ratio: 3 / 2;
+	}
+
+	@media (min-width: 48rem) {
+		.case {
+			padding-block: 9rem 0;
+		}
+
+		.case__inner {
+			padding-inline: 2rem;
+		}
+
+		.case__intro {
+			flex-direction: row;
+			align-items: flex-end;
+			justify-content: space-between;
+			gap: 2.5rem;
+		}
+
+		.case__title {
+			font-size: 6.5rem;
+			letter-spacing: -0.16rem;
+		}
+
+		.case__summary {
+			flex: 0 1 28rem;
+			font-size: 1rem;
+		}
+
+		.case__meta {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			gap: 1rem;
+			margin-top: 3rem;
+		}
+
+		.case__hero {
+			margin-top: 3rem;
+		}
+
+		.case__hero .case__image,
+		.case__shot .case__image {
+			border-radius: 1.5rem;
+		}
+
+		.case__split {
+			grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+			gap: 2.5rem 3rem;
+			margin-top: 6rem;
+		}
+
+		.case__split--reverse {
+			grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+		}
+
+		.case__split--reverse .case__copy {
+			order: 2;
+		}
+
+		.case__split--reverse .case__gallery {
+			order: 1;
+		}
+
+		.case__copy {
+			position: sticky;
+			top: 6.5rem;
+		}
+
+		.case__heading {
+			font-size: 2.75rem;
+			letter-spacing: -0.07rem;
+		}
+
+		.case__text,
+		.case__list {
+			font-size: 1rem;
+		}
+
+		.case__gallery {
+			gap: 3.5rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.case {
+			padding-block: 10rem 0;
+		}
+
+		.case__inner {
+			padding-inline: 2.5rem;
+		}
+
+		.case__title {
+			font-size: 8.75rem;
+			letter-spacing: -0.24rem;
+		}
+
+		.case__summary {
+			flex-basis: 32rem;
+			max-width: 32rem;
+			font-size: 1.0625rem;
+		}
+
+		.case__meta-item {
+			padding: 1.25rem 1.35rem 1.35rem;
+			border-radius: 1.5rem;
+		}
+
+		.case__meta-value {
+			font-size: 1.125rem;
+		}
+
+		.case__hero,
+		.case__shot {
+			border-radius: 1.75rem;
+		}
+
+		.case__split {
+			gap: 3rem 4rem;
+			margin-top: 7.5rem;
+		}
+
+		.case__heading {
+			font-size: 3.25rem;
+			letter-spacing: -0.08rem;
+		}
+
+		.case__gallery {
+			gap: 4.5rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyCaseMotion: (() => void) | undefined;
+
+	function initCaseMotion() {
+		destroyCaseMotion?.();
+
+		const article = document.querySelector('[data-case]');
+		if (!(article instanceof HTMLElement)) return;
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const header = article.querySelector('.case__intro');
+			const revealTargets = article.querySelectorAll('[data-case-reveal]');
+
+			if (!(header instanceof HTMLElement) || revealTargets.length === 0) return;
+
+			const split = SplitText.create(revealTargets, {
+				type: 'lines',
+				mask: 'lines',
+				autoSplit: true,
+				aria: 'auto',
+				linesClass: 'case-reveal-line',
+				onSplit(self) {
+					return gsap.from(self.lines, {
+						yPercent: 110,
+						duration: 0.95,
+						ease: 'power3.out',
+						stagger: 0.12,
+						scrollTrigger: {
+							trigger: header,
+							start: 'top 80%',
+							once: true,
+						},
+					});
+				},
+			});
+
+			return () => split.revert();
+		});
+
+		destroyCaseMotion = () => {
+			mm.revert();
+			destroyCaseMotion = undefined;
+		};
+	}
+
+	initCaseMotion();
+	document.addEventListener('astro:after-swap', initCaseMotion);
+</script>

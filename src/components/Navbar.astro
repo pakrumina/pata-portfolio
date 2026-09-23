@@ -1,0 +1,513 @@
+---
+import { NAV_LINKS_LEFT, NAV_LINKS_RIGHT } from '../consts';
+
+const pathname = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+function isActive(href: string) {
+	if (href === '/') return pathname === '/';
+	return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+function charsOf(label: string) {
+	return [...label];
+}
+---
+
+<header class="nav" data-nav>
+	<button
+		class="nav__overlay"
+		type="button"
+		data-nav-overlay
+		tabindex="-1"
+		aria-hidden="true"
+		aria-label="Close menu"
+	></button>
+	<div class="nav__bar">
+		<div class="nav__inner">
+			<nav class="nav__group nav__group--left" aria-label="Primary">
+				{
+					NAV_LINKS_LEFT.map((link) => (
+						<a
+							class:list={['nav__link', { 'is-active': isActive(link.href) }]}
+							href={link.href}
+							data-nav-link
+							data-nav-hover
+							aria-label={link.label}
+						>
+							<span class="nav__link-mask" aria-hidden="true">
+								{charsOf(link.label).map((char) => (
+									<span class="nav__char-col">
+										<span class="nav__char-track">
+											<span class="nav__char">{char}</span>
+											<span class="nav__char">{char}</span>
+										</span>
+									</span>
+								))}
+							</span>
+						</a>
+					))
+				}
+			</nav>
+
+			<a class="nav__logo" href="/" aria-label="Craift home">
+				<span class="nav__logo-track">
+					<span class="nav__logo-face">
+						<span class="nav__mark">©</span>
+						<span class="nav__dot" aria-hidden="true"></span>
+					</span>
+					<span class="nav__logo-face nav__logo-face--alt">
+						<span class="nav__mark">©</span>
+						<span class="nav__dot" aria-hidden="true"></span>
+					</span>
+				</span>
+			</a>
+
+			<nav class="nav__group nav__group--right" aria-label="Secondary">
+				{
+					NAV_LINKS_RIGHT.map((link) => (
+						<a
+							class:list={['nav__link', { 'is-active': isActive(link.href) }]}
+							href={link.href}
+							data-nav-link
+							data-nav-hover
+							aria-label={link.label}
+						>
+							<span class="nav__link-mask" aria-hidden="true">
+								{charsOf(link.label).map((char) => (
+									<span class="nav__char-col">
+										<span class="nav__char-track">
+											<span class="nav__char">{char}</span>
+											<span class="nav__char">{char}</span>
+										</span>
+									</span>
+								))}
+							</span>
+						</a>
+					))
+				}
+			</nav>
+
+			<button
+				class="nav__toggle"
+				type="button"
+				data-nav-toggle
+				aria-expanded="false"
+				aria-controls="nav-menu"
+				aria-label="Open menu"
+			>
+				<span class="nav__toggle-line" aria-hidden="true"></span>
+				<span class="nav__toggle-line" aria-hidden="true"></span>
+			</button>
+		</div>
+	</div>
+
+	<div class="nav__menu" id="nav-menu" data-nav-menu hidden>
+		<nav class="nav__menu-list" aria-label="Mobile">
+			{
+				[...NAV_LINKS_LEFT, ...NAV_LINKS_RIGHT].map((link, index) => (
+					<a
+						class:list={['nav__menu-link', { 'is-active': isActive(link.href) }]}
+						href={link.href}
+						data-nav-link
+						data-nav-hover
+						aria-label={link.label}
+						style={`--i: ${index}`}
+					>
+						<span class="nav__link-mask" aria-hidden="true">
+							{charsOf(link.label).map((char) => (
+								<span class="nav__char-col">
+									<span class="nav__char-track">
+										<span class="nav__char">{char}</span>
+										<span class="nav__char">{char}</span>
+									</span>
+								</span>
+							))}
+						</span>
+					</a>
+				))
+			}
+		</nav>
+	</div>
+</header>
+
+<script>
+	import gsap from 'gsap';
+
+	function initNav() {
+		const nav = document.querySelector('[data-nav]');
+		const toggle = document.querySelector('[data-nav-toggle]');
+		const menu = document.querySelector('[data-nav-menu]');
+		const overlay = document.querySelector('[data-nav-overlay]');
+		if (
+			!(nav instanceof HTMLElement) ||
+			!(toggle instanceof HTMLButtonElement) ||
+			!(menu instanceof HTMLElement) ||
+			!(overlay instanceof HTMLButtonElement)
+		) {
+			return;
+		}
+
+		let closeTimer = 0;
+
+		const setOpen = (open: boolean) => {
+			window.clearTimeout(closeTimer);
+			toggle.setAttribute('aria-expanded', String(open));
+			toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+			overlay.setAttribute('aria-hidden', String(!open));
+
+			if (open) {
+				menu.hidden = false;
+				requestAnimationFrame(() => {
+					nav.classList.add('is-open');
+				});
+				return;
+			}
+
+			nav.classList.remove('is-open');
+			closeTimer = window.setTimeout(() => {
+				menu.hidden = true;
+			}, 400);
+		};
+
+		toggle.addEventListener('click', () => {
+			setOpen(!nav.classList.contains('is-open'));
+		});
+
+		overlay.addEventListener('click', () => setOpen(false));
+
+		nav.querySelectorAll('[data-nav-link]').forEach((link) => {
+			link.addEventListener('click', () => setOpen(false));
+		});
+
+		const mm = gsap.matchMedia();
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const cleanups: Array<() => void> = [];
+
+			nav.querySelectorAll('[data-nav-hover]').forEach((link) => {
+				const tracks = link.querySelectorAll('.nav__char-track');
+				if (tracks.length === 0) return;
+
+				gsap.set(tracks, { yPercent: 0 });
+
+				let hoverTl: ReturnType<typeof gsap.to> | undefined;
+
+				const playHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: -50,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				const resetHover = () => {
+					hoverTl?.kill();
+					hoverTl = gsap.to(tracks, {
+						yPercent: 0,
+						duration: 0.35,
+						ease: 'power3.out',
+						stagger: 0.03,
+						overwrite: true,
+					});
+				};
+
+				link.addEventListener('mouseenter', playHover);
+				link.addEventListener('mouseleave', resetHover);
+				link.addEventListener('focus', playHover);
+				link.addEventListener('blur', resetHover);
+
+				cleanups.push(() => {
+					hoverTl?.kill();
+					link.removeEventListener('mouseenter', playHover);
+					link.removeEventListener('mouseleave', resetHover);
+					link.removeEventListener('focus', playHover);
+					link.removeEventListener('blur', resetHover);
+				});
+			});
+
+			return () => {
+				cleanups.forEach((cleanup) => cleanup());
+			};
+		});
+	}
+
+	initNav();
+	document.addEventListener('astro:after-swap', initNav);
+</script>
+
+<style>
+	.nav {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		z-index: 30;
+		width: 100%;
+		background-color: transparent;
+	}
+
+	.nav__overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 0;
+		width: 100%;
+		height: 100vh;
+		padding: 0;
+		border: 0;
+		background-color: #000;
+		opacity: 0;
+		visibility: hidden;
+		pointer-events: none;
+		cursor: pointer;
+		transition:
+			opacity 0.4s ease,
+			visibility 0.4s ease;
+	}
+
+	.nav.is-open .nav__overlay {
+		opacity: 0.75;
+		visibility: visible;
+		pointer-events: auto;
+	}
+
+	.nav__bar {
+		position: relative;
+		z-index: 2;
+		background-color: transparent;
+	}
+
+	.nav__inner {
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding: 1rem 1.25rem;
+		gap: 1rem;
+	}
+
+	.nav__group {
+		display: none;
+		align-items: center;
+		gap: 0.75rem;
+		flex: 1;
+	}
+
+	.nav__group--right {
+		justify-content: flex-end;
+	}
+
+	.nav__link,
+	.nav__menu-link {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.55rem 1.35rem;
+		border-radius: 6rem;
+		background-color: #1a1a1a;
+		color: #fff;
+		font-family: var(--font-sans);
+		font-size: 0.875rem;
+		font-weight: 700;
+		letter-spacing: 0.04rem;
+		line-height: 1.2;
+		text-decoration: none;
+		text-transform: uppercase;
+		white-space: nowrap;
+		transition: background-color 0.2s ease;
+	}
+
+	.nav__link-mask {
+		display: inline-flex;
+		overflow: hidden;
+		height: 1.2em;
+		line-height: 1.2;
+	}
+
+	.nav__char-col {
+		display: block;
+		overflow: hidden;
+		height: 1.2em;
+		line-height: 1.2;
+	}
+
+	.nav__char-track {
+		display: flex;
+		flex-direction: column;
+		will-change: transform;
+	}
+
+	.nav__char {
+		display: block;
+		flex: 0 0 1.2em;
+		height: 1.2em;
+		line-height: 1.2;
+	}
+
+	.nav__link:hover,
+	.nav__menu-link:hover {
+		background-color: #2e2e2e;
+	}
+
+	.nav__logo {
+		--logo-size: 2.25rem;
+		position: relative;
+		display: block;
+		overflow: hidden;
+		width: fit-content;
+		height: var(--logo-size);
+		max-height: var(--logo-size);
+		min-height: 0;
+		flex-shrink: 0;
+		color: #fff;
+		line-height: 1;
+		text-decoration: none;
+	}
+
+	.nav__logo-track {
+		display: flex;
+		flex-direction: column;
+		transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.nav__logo:hover .nav__logo-track,
+	.nav__logo:focus-visible .nav__logo-track {
+		transform: translateY(calc(-1 * var(--logo-size)));
+	}
+
+	.nav__logo-face {
+		display: flex;
+		align-items: flex-end;
+		flex: 0 0 var(--logo-size);
+		gap: 0.12rem;
+		width: 100%;
+		height: var(--logo-size);
+		overflow: hidden;
+		color: #fff;
+	}
+
+	.nav__logo-face--alt {
+		color: #8a8a8a;
+	}
+
+	.nav__mark {
+		font-size: var(--logo-size);
+		font-weight: 700;
+		line-height: 1;
+	}
+
+	.nav__dot {
+		width: 0.28rem;
+		height: 0.28rem;
+		margin-bottom: 0.18rem;
+		border-radius: 50%;
+		background-color: currentColor;
+	}
+
+	.nav__toggle {
+		position: absolute;
+		right: 1.25rem;
+		top: calc(50% + 0.25rem);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 0.35rem;
+		width: 3.75rem;
+		height: 3.75rem;
+		padding: 0;
+		border: 0.08rem solid #2a2a2a;
+		border-radius: 50%;
+		background-color: #1a1a1a;
+		transform: translateY(-50%);
+		cursor: pointer;
+	}
+
+	.nav__toggle-line {
+		display: block;
+		width: 1.25rem;
+		height: 0.12rem;
+		border-radius: 1rem;
+		background-color: #fff;
+		transition:
+			transform 0.35s ease,
+			opacity 0.35s ease;
+		transform-origin: center;
+	}
+
+	.nav.is-open .nav__toggle-line:first-child {
+		transform: translateY(0.235rem) rotate(45deg);
+	}
+
+	.nav.is-open .nav__toggle-line:last-child {
+		transform: translateY(-0.235rem) rotate(-45deg);
+	}
+
+	.nav__menu {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		right: 0;
+		z-index: 1;
+		background-color: var(--color-bg);
+		padding: 0.75rem 1.25rem 1.5rem;
+		overflow: hidden;
+		opacity: 0;
+		transform: translateY(-0.5rem);
+		transition:
+			opacity 0.35s ease,
+			transform 0.35s ease;
+	}
+
+	.nav.is-open .nav__menu {
+		opacity: 1;
+		transform: translateY(0);
+	}
+
+	.nav__menu-list {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.65rem;
+		max-width: 100rem;
+		margin-inline: auto;
+	}
+
+	.nav__menu-link {
+		width: 100%;
+		opacity: 0;
+		transform: translateY(-0.6rem);
+		pointer-events: none;
+		transition:
+			opacity 0.35s ease,
+			transform 0.35s ease;
+		transition-delay: calc(var(--i) * 0.05s);
+	}
+
+	.nav.is-open .nav__menu-link {
+		opacity: 1;
+		transform: translateY(0);
+		pointer-events: auto;
+	}
+
+	@media (min-width: 64rem) {
+		.nav__inner {
+			justify-content: space-between;
+		}
+
+		.nav__group {
+			display: flex;
+		}
+
+		.nav__toggle,
+		.nav__menu,
+		.nav__overlay {
+			display: none;
+		}
+	}
+</style>

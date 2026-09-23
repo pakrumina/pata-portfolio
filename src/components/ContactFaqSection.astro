@@ -1,0 +1,333 @@
+---
+import { CONTACT_FAQS, CONTACT_FAQ_TITLE } from '../consts';
+---
+
+<section class="contact-faq" id="faq" aria-label="Frequently asked questions">
+	<div class="contact-faq__inner">
+		<h2 class="contact-faq__title">
+			<span class="contact-faq__title-lead" data-contact-faq-reveal>{CONTACT_FAQ_TITLE.lead}</span>
+			<span class="contact-faq__title-main" data-contact-faq-reveal>{CONTACT_FAQ_TITLE.main}</span>
+		</h2>
+
+		<div class="contact-faq__list">
+			{
+				CONTACT_FAQS.map((faq, index) => (
+					<div class="contact-faq__item" data-contact-faq>
+						<button
+							class="contact-faq__trigger"
+							type="button"
+							aria-expanded="false"
+							aria-controls={`contact-faq-${index}`}
+							data-contact-faq-trigger
+						>
+							<span class="contact-faq__question">
+								{index + 1}. {faq.question}
+							</span>
+							<span class="contact-faq__icon" aria-hidden="true" data-contact-faq-icon>
+								<span></span>
+								<span></span>
+							</span>
+						</button>
+						<div class="contact-faq__panel" id={`contact-faq-${index}`} data-contact-faq-panel>
+							<p class="contact-faq__answer">{faq.answer}</p>
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.contact-faq {
+		width: 100%;
+		padding-block: 4rem 8rem;
+		background-color: var(--color-bg);
+	}
+
+	.contact-faq__inner {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2.5rem;
+		width: 100%;
+		max-width: 100rem;
+		margin-inline: auto;
+		padding-inline: 1.25rem;
+	}
+
+	.contact-faq__title {
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+		min-width: 0;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		font-weight: 600;
+		font-size: 2.75rem;
+		line-height: 1;
+		letter-spacing: -0.05rem;
+		overflow: visible;
+	}
+
+	.contact-faq__title-lead,
+	.contact-faq__title-main {
+		display: block;
+		white-space: nowrap;
+	}
+
+	.contact-faq__title-main {
+		color: #737373;
+	}
+
+	.contact-faq__title :global(.contact-faq-reveal-line) {
+		padding-bottom: 0.08em;
+	}
+
+	.contact-faq__list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		width: 100%;
+		min-width: 0;
+	}
+
+	.contact-faq__item {
+		overflow: hidden;
+		border: 0.0625rem solid rgb(245 245 245 / 0.14);
+		border-radius: 1.25rem;
+		background-color: #111;
+		-webkit-tap-highlight-color: transparent;
+	}
+
+	.contact-faq__trigger {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		width: 100%;
+		padding: 1.525rem 1.25rem;
+		border: 0;
+		border-radius: inherit;
+		background-color: #111;
+		color: var(--color-fg);
+		font-family: var(--font-sans);
+		text-align: left;
+		cursor: pointer;
+		appearance: none;
+		-webkit-appearance: none;
+		-webkit-tap-highlight-color: transparent;
+		touch-action: manipulation;
+		transform: translateZ(0);
+		-webkit-user-select: none;
+		user-select: none;
+	}
+
+	.contact-faq__trigger:hover,
+	.contact-faq__trigger:focus,
+	.contact-faq__trigger:focus-visible,
+	.contact-faq__trigger:active {
+		background-color: #111;
+		color: var(--color-fg);
+		outline: none;
+	}
+
+	.contact-faq__question {
+		min-width: 0;
+		font-weight: 600;
+		font-size: 1.3125rem;
+		line-height: 1.35;
+		letter-spacing: 0.02rem;
+		-webkit-font-smoothing: antialiased;
+		transform: translateZ(0);
+	}
+
+	.contact-faq__icon {
+		position: relative;
+		display: block;
+		flex: 0 0 auto;
+		width: 0.85rem;
+		height: 0.85rem;
+	}
+
+	.contact-faq__icon span {
+		position: absolute;
+		top: 50%;
+		left: 0;
+		width: 100%;
+		height: 0.1rem;
+		border-radius: 999rem;
+		background-color: currentColor;
+	}
+
+	.contact-faq__icon span:first-child {
+		transform: translateY(-50%);
+	}
+
+	.contact-faq__icon span:last-child {
+		transform: translateY(-50%) rotate(90deg);
+	}
+
+	.contact-faq__panel {
+		height: 0;
+		overflow: hidden;
+	}
+
+	.contact-faq__answer {
+		margin: 0;
+		padding: 0 1.25rem 1.25rem;
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		font-weight: 400;
+		font-size: 0.9375rem;
+		line-height: 1.55;
+		letter-spacing: -0.01rem;
+	}
+
+	@media (min-width: 48rem) {
+		.contact-faq {
+			padding-block: 5rem 8rem;
+		}
+
+		.contact-faq__inner {
+			padding-inline: 2rem;
+			gap: 3rem;
+		}
+
+		.contact-faq__title {
+			font-size: 5.5rem;
+			letter-spacing: -0.1rem;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.contact-faq {
+			padding-block: 6rem 10rem;
+		}
+
+		.contact-faq__inner {
+			display: grid;
+			grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+			align-items: start;
+			gap: 3rem;
+			padding-inline: 2.5rem;
+		}
+
+		.contact-faq__title {
+			font-size: 6.75rem;
+			letter-spacing: -0.14rem;
+		}
+	}
+</style>
+
+<script>
+	import gsap from 'gsap';
+	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { SplitText } from 'gsap/SplitText';
+
+	gsap.registerPlugin(ScrollTrigger, SplitText);
+
+	let destroyContactFaq: (() => void) | undefined;
+
+	function initContactFaq() {
+		destroyContactFaq?.();
+
+		const cleanups: Array<() => void> = [];
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const mm = gsap.matchMedia();
+
+		mm.add('(prefers-reduced-motion: no-preference)', () => {
+			const header = document.querySelector('.contact-faq__title');
+			const revealTargets = document.querySelectorAll('[data-contact-faq-reveal]');
+
+			if (!(header instanceof HTMLElement) || revealTargets.length === 0) {
+				return;
+			}
+
+			const split = SplitText.create(revealTargets, {
+				type: 'lines',
+				mask: 'lines',
+				autoSplit: true,
+				aria: 'auto',
+				linesClass: 'contact-faq-reveal-line',
+				onSplit(self) {
+					return gsap.from(self.lines, {
+						yPercent: 110,
+						duration: 0.95,
+						ease: 'power3.out',
+						stagger: 0.12,
+						scrollTrigger: {
+							trigger: header,
+							start: 'top 80%',
+							once: true,
+						},
+					});
+				},
+			});
+
+			return () => split.revert();
+		});
+
+		document.querySelectorAll('[data-contact-faq]').forEach((item) => {
+			if (!(item instanceof HTMLElement)) return;
+
+			const trigger = item.querySelector('[data-contact-faq-trigger]');
+			const panel = item.querySelector('[data-contact-faq-panel]');
+			const icon = item.querySelector('[data-contact-faq-icon]');
+
+			if (
+				!(trigger instanceof HTMLButtonElement) ||
+				!(panel instanceof HTMLElement) ||
+				!(icon instanceof HTMLElement)
+			) {
+				return;
+			}
+
+			gsap.set(panel, { height: 0, overflow: 'hidden' });
+			gsap.set(icon, { rotation: 0, transformOrigin: '50% 50%' });
+
+			const setOpen = (open: boolean) => {
+				trigger.setAttribute('aria-expanded', String(open));
+				item.classList.toggle('is-open', open);
+
+				const duration = reduceMotion ? 0 : 0.4;
+
+				gsap.to(panel, {
+					height: open ? 'auto' : 0,
+					duration,
+					ease: 'power3.inOut',
+					overwrite: true,
+				});
+
+				gsap.to(icon, {
+					rotation: open ? 45 : 0,
+					duration: reduceMotion ? 0 : 0.35,
+					ease: 'power3.out',
+					overwrite: true,
+					force3D: false,
+				});
+			};
+
+			const onClick = () => {
+				const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+				setOpen(!isOpen);
+			};
+
+			trigger.addEventListener('click', onClick);
+
+			cleanups.push(() => {
+				gsap.killTweensOf([panel, icon]);
+				trigger.removeEventListener('click', onClick);
+			});
+		});
+
+		destroyContactFaq = () => {
+			mm.revert();
+			cleanups.forEach((cleanup) => cleanup());
+			destroyContactFaq = undefined;
+		};
+	}
+
+	initContactFaq();
+	document.addEventListener('astro:after-swap', initContactFaq);
+</script>

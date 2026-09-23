@@ -1,0 +1,24 @@
+---
+import { ABOUT_HERO_DESCRIPTION, ABOUT_HERO_KICKER, ABOUT_HERO_TITLE } from '../consts';
+import CtaSection from '../components/CtaSection.astro';
+import HeroSection from '../components/HeroSection.astro';
+import JourneySection from '../components/JourneySection.astro';
+import ProcessSection from '../components/ProcessSection.astro';
+import TeamSection from '../components/TeamSection.astro';
+import ValuesSection from '../components/ValuesSection.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About">
+	<HeroSection
+		kicker={ABOUT_HERO_KICKER}
+		titleLead={ABOUT_HERO_TITLE.lead}
+		titleMain={ABOUT_HERO_TITLE.main}
+		description={ABOUT_HERO_DESCRIPTION}
+	/>
+	<JourneySection />
+	<ProcessSection />
+	<ValuesSection />
+	<TeamSection />
+	<CtaSection />
+</BaseLayout>
