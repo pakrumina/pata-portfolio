@@ -1,13 +1,8 @@
 ---
 import { HERO_DESCRIPTION, HERO_KICKER, HERO_TITLE } from '../consts';
-import AboutSection from '../components/AboutSection.astro';
 import CtaSection from '../components/CtaSection.astro';
 import HeroSection from '../components/HeroSection.astro';
 import PartnerMarquee from '../components/PartnerMarquee.astro';
-import PricingSection from '../components/PricingSection.astro';
-import ServicesSection from '../components/ServicesSection.astro';
-import TestimonialsSection from '../components/TestimonialsSection.astro';
-import WorksSection from '../components/WorksSection.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -21,11 +16,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 	<section class="partners" aria-label="Partners">
 		<PartnerMarquee />
 	</section>
-	<AboutSection />
-	<WorksSection />
-	<ServicesSection />
-	<TestimonialsSection />
-	<PricingSection />
 	<CtaSection />
 </BaseLayout>
 
