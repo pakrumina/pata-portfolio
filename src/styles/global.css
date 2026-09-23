@@ -1,6 +1,6 @@
 :root {
-	--color-bg: #f8f8f6;
-	--color-fg: #ffffff;
+	--color-bg: #fff;
+	--color-fg: #000;
 	--color-muted: #a3a3a3;
 	--font-sans: var(--font-creato-display), system-ui, sans-serif;
 }

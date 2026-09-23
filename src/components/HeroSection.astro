@@ -20,11 +20,6 @@ const { kicker, titleLead, titleMain, description } = Astro.props;
 		<div class="hero__overlay" aria-hidden="true"></div>
 	</div>
 	<div class="hero__copy">
-		<p class="hero__kicker">
-			<span class="hero__kicker-mark" aria-hidden="true">✦</span>
-			{kicker}
-			<span class="hero__kicker-mark" aria-hidden="true">✦</span>
-		</p>
 		<h1 class="hero__title">
 			<span class="hero__title-line">{titleLead}</span>
 			<span class="hero__title-line">{titleMain}</span>
@@ -120,7 +115,7 @@ const { kicker, titleLead, titleMain, description } = Astro.props;
 		flex-direction: column;
 		align-items: center;
 		margin: 0;
-		color: #fff;
+		color: #000;
 		font-family: var(--font-sans);
 		font-weight: 900;
 		font-size: 4.375rem;
@@ -136,7 +131,7 @@ const { kicker, titleLead, titleMain, description } = Astro.props;
 
 	.hero__description {
 		margin: 0;
-		color: rgb(255 255 255 / 0.88);
+		color: #000;
 		font-family: var(--font-sans);
 		font-weight: 500;
 		font-size: 1.125rem;

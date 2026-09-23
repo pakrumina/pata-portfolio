@@ -99,8 +99,8 @@ function charsOf(label: string) {
 		margin-bottom: 0.08em;
 		padding: 0.9rem 1.6rem;
 		border-radius: 999rem;
-		background-color: #fff;
-		color: #0a0a0a;
+		background-color: #000;
+		color: #fff;
 		font-family: var(--font-sans);
 		font-weight: 600;
 		font-size: 0.9375rem;
@@ -140,7 +140,7 @@ function charsOf(label: string) {
 
 	.blog__button:hover,
 	.blog__button:focus-visible {
-		background-color: #f5f5f5;
+		background-color: #2e2e2e;
 		outline: none;
 	}
 
@@ -261,50 +261,6 @@ function charsOf(label: string) {
 
 				cleanups.push(() => split.revert());
 			}
-
-			section.querySelectorAll('[data-blog-link-hover]').forEach((link) => {
-				const tracks = link.querySelectorAll('.blog__char-track');
-				if (tracks.length === 0) return;
-
-				gsap.set(tracks, { yPercent: 0 });
-
-				let hoverTl: ReturnType<typeof gsap.to> | undefined;
-
-				const playHover = () => {
-					hoverTl?.kill();
-					hoverTl = gsap.to(tracks, {
-						yPercent: -50,
-						duration: 0.35,
-						ease: 'power3.out',
-						stagger: 0.03,
-						overwrite: true,
-					});
-				};
-
-				const resetHover = () => {
-					hoverTl?.kill();
-					hoverTl = gsap.to(tracks, {
-						yPercent: 0,
-						duration: 0.35,
-						ease: 'power3.out',
-						stagger: 0.03,
-						overwrite: true,
-					});
-				};
-
-				link.addEventListener('mouseenter', playHover);
-				link.addEventListener('mouseleave', resetHover);
-				link.addEventListener('focus', playHover);
-				link.addEventListener('blur', resetHover);
-
-				cleanups.push(() => {
-					hoverTl?.kill();
-					link.removeEventListener('mouseenter', playHover);
-					link.removeEventListener('mouseleave', resetHover);
-					link.removeEventListener('focus', playHover);
-					link.removeEventListener('blur', resetHover);
-				});
-			});
 
 			return () => {
 				cleanups.forEach((cleanup) => cleanup());
